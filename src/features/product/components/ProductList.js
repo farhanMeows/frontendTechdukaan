@@ -77,38 +77,50 @@ export default function ProductList() {
       options: subcategories,
     },
     {
-      id: "brands",
-      name: "brands",
+      id: "brand",
+      name: "brand",
       options: brands,
     },
   ];
   const handleFilter = (e, section, option) => {
     const newFilter = { ...filter };
-    console.log(option.value);
-    // Check if the section is 'category' and handle subcategory fetching
+
+    // Handle category selection
     if (section.id === "category") {
-      setSelectedCategory(option.value); // Store the selected category
-      fetchSubcategories(option.id); // Fetch subcategories for the selected category
+      // Set the selected category to only the currently selected one
+      setSelectedCategory(option.value);
+      newFilter[section.id] = [option.value]; // Overwrite the category array with the selected option
+
+      // Fetch subcategories and brands based on the selected category
+      fetchSubcategories(option.id);
       fetchBrands(option.id);
     }
-
-    // Update the filter state based on checkbox selection
-    if (e.target.checked) {
-      if (newFilter[section.id]) {
+    // Handle brands filter
+    else if (section.id === "brands") {
+      if (e.target.checked) {
+        // Add the brand if checked
+        newFilter[section.id] = newFilter[section.id] || [];
         newFilter[section.id].push(option.value);
       } else {
-        newFilter[section.id] = [option.value];
-      }
-    } else {
-      const index = newFilter[section.id].findIndex(
-        (el) => el === option.value
-      );
-      if (index !== -1) {
-        newFilter[section.id].splice(index, 1); // Only splice if the index is found
+        // Remove the brand if unchecked
+        newFilter[section.id] = newFilter[section.id].filter(
+          (value) => value !== option.value
+        );
       }
     }
+    // Handle other filters (subcategories, etc.)
+    else {
+      if (e.target.checked) {
+        newFilter[section.id] = newFilter[section.id] || [];
+        newFilter[section.id].push(option.value);
+      } else {
+        newFilter[section.id] = newFilter[section.id].filter(
+          (value) => value !== option.value
+        );
+      }
+    }
+    console.log(newFilter);
 
-    console.log({ newFilter });
     setFilter(newFilter); // Update the filter state
   };
 
@@ -174,6 +186,7 @@ export default function ProductList() {
           mobileFiltersOpen={mobileFiltersOpen}
           setMobileFiltersOpen={setMobileFiltersOpen}
           filters={filters}
+          selectedCategory={selectedCategory}
         ></MobileFilter>
 
         <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -255,8 +268,8 @@ export default function ProductList() {
               <DesktopFilter
                 handleFilter={handleFilter}
                 filters={filters}
-                selectedCategory={selectedCategory} // Pass selected category
-                subcategories={subcategories} // Pass fetched subcategories
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
               ></DesktopFilter>
               {/* Product grid */}
               <div className="lg:col-span-3">
@@ -284,6 +297,7 @@ function MobileFilter({
   setMobileFiltersOpen,
   handleFilter,
   filters,
+  selectedCategory,
 }) {
   return (
     <Transition.Root show={mobileFiltersOpen} as={Fragment}>
@@ -333,6 +347,7 @@ function MobileFilter({
                   <Disclosure
                     as="div"
                     key={section.id}
+                    defaultOpen={true}
                     className="border-t border-gray-200 px-4 py-6"
                   >
                     {({ open }) => (
@@ -364,17 +379,33 @@ function MobileFilter({
                                 key={option.value}
                                 className="flex items-center"
                               >
-                                <input
-                                  id={`filter-mobile-${section.id}-${optionIdx}`}
-                                  name={`${section.id}[]`}
-                                  defaultValue={option.value}
-                                  type="checkbox"
-                                  defaultChecked={option.checked}
-                                  onChange={(e) =>
-                                    handleFilter(e, section, option)
-                                  }
-                                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                />
+                                {section.id === "category" ? (
+                                  // Use checked for category options
+                                  <input
+                                    id={`filter-mobile-${section.id}-${optionIdx}`}
+                                    name={`${section.id}[]`}
+                                    value={option.value}
+                                    type="checkbox"
+                                    checked={selectedCategory === option.value}
+                                    onChange={(e) =>
+                                      handleFilter(e, section, option)
+                                    }
+                                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                  />
+                                ) : (
+                                  // Use defaultChecked for other options
+                                  <input
+                                    id={`filter-mobile-${section.id}-${optionIdx}`}
+                                    name={`${section.id}[]`}
+                                    value={option.value}
+                                    type="checkbox"
+                                    defaultChecked={option.checked}
+                                    onChange={(e) =>
+                                      handleFilter(e, section, option)
+                                    }
+                                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                  />
+                                )}
                                 <label
                                   htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
                                   className="ml-3 min-w-0 flex-1 text-gray-500"
@@ -410,6 +441,7 @@ function DesktopFilter({
         <Disclosure
           as="div"
           key={section.id}
+          defaultOpen={true}
           className="border-b border-gray-200 py-6"
         >
           {({ open }) => (
@@ -432,15 +464,29 @@ function DesktopFilter({
                 <div className="space-y-4">
                   {section.options.map((option, optionIdx) => (
                     <div key={option.value} className="flex items-center">
-                      <input
-                        id={`filter-${section.id}-${optionIdx}`}
-                        name={`${section.id}[]`}
-                        defaultValue={option.value}
-                        type="checkbox"
-                        defaultChecked={option.checked}
-                        onChange={(e) => handleFilter(e, section, option)}
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
+                      {section.id === "category" ? (
+                        // Use checked for category options
+                        <input
+                          id={`filter-${section.id}-${optionIdx}`}
+                          name={`${section.id}[]`}
+                          value={option.value}
+                          type="checkbox"
+                          checked={selectedCategory === option.value}
+                          onChange={(e) => handleFilter(e, section, option)}
+                          className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                        />
+                      ) : (
+                        // Use defaultChecked for other options
+                        <input
+                          id={`filter-${section.id}-${optionIdx}`}
+                          name={`${section.id}[]`}
+                          value={option.value}
+                          type="checkbox"
+                          defaultChecked={option.checked}
+                          onChange={(e) => handleFilter(e, section, option)}
+                          className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                        />
+                      )}
                       <label
                         htmlFor={`filter-${section.id}-${optionIdx}`}
                         className="ml-3 text-sm text-gray-600"
@@ -455,39 +501,6 @@ function DesktopFilter({
           )}
         </Disclosure>
       ))}
-      {/* Render Subcategories */}
-      {selectedCategory && (
-        <div className="border-b border-gray-200 py-6">
-          <h3 className="font-medium text-gray-900">Subcategories</h3>
-          <div className="space-y-4">
-            {Array.isArray(subcategories) &&
-              subcategories.map((subcat, index) => (
-                <div key={subcat.id} className="flex items-center">
-                  <input
-                    id={`filter-subcategory-${index}`}
-                    name={`subcategory[]`}
-                    type="checkbox"
-                    value={subcat.id}
-                    onChange={(e) =>
-                      handleFilter(
-                        e,
-                        { id: "subcategory" },
-                        { value: subcat.id, label: subcat.label }
-                      )
-                    }
-                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                  />
-                  <label
-                    htmlFor={`filter-subcategory-${index}`}
-                    className="ml-3 text-sm text-gray-600"
-                  >
-                    {subcat.label}
-                  </label>
-                </div>
-              ))}
-          </div>
-        </div>
-      )}
     </form>
   );
 }
