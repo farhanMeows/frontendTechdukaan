@@ -1,82 +1,158 @@
-import React, { useState, Fragment, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, Fragment, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   fetchBrandsAsync,
   fetchCategoriesAsync,
   fetchProductsByFiltersAsync,
+  fetchSubcategoriesAsync, // Add import for fetching subcategories
   selectAllProducts,
   selectBrands,
   selectCategories,
   selectTotalItems,
-} from '../../product/productSlice';
-import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+} from "../../product/productSlice";
+import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
   StarIcon,
-} from '@heroicons/react/20/solid';
-import { Link } from 'react-router-dom';
+} from "@heroicons/react/20/solid";
+import { Link } from "react-router-dom";
 import {
   ChevronDownIcon,
   FunnelIcon,
   MinusIcon,
   PlusIcon,
   Squares2X2Icon,
-} from '@heroicons/react/20/solid';
-import { ITEMS_PER_PAGE } from '../../../app/constants';
+} from "@heroicons/react/20/solid";
+import { ITEMS_PER_PAGE } from "../../../app/constants";
 
 const sortOptions = [
-  { name: 'Best Rating', sort: 'rating', order: 'desc', current: false },
-  { name: 'Price: Low to High', sort: 'discountPrice', order: 'asc', current: false },
-  { name: 'Price: High to Low', sort: 'discountPrice', order: 'desc', current: false },
+  { name: "Best Rating", sort: "rating", order: "desc", current: false },
+  {
+    name: "Price: Low to High",
+    sort: "discountPrice",
+    order: "asc",
+    current: false,
+  },
+  {
+    name: "Price: High to Low",
+    sort: "discountPrice",
+    order: "desc",
+    current: false,
+  },
 ];
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(' ');
+  return classes.filter(Boolean).join(" ");
 }
 
 export default function AdminProductList() {
   const dispatch = useDispatch();
   const products = useSelector(selectAllProducts);
-  const brands = useSelector(selectBrands);
+  // const brands = useSelector(selectBrands);
   const categories = useSelector(selectCategories);
   const totalItems = useSelector(selectTotalItems);
-  const filters = [
-    {
-      id: 'category',
-      name: 'Category',
-      options: categories,
-    },
-    {
-      id: 'brand',
-      name: 'Brands',
-      options: brands,
-    },
-  ];
 
   const [filter, setFilter] = useState({});
   const [sort, setSort] = useState({});
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [page, setPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [subcategories, setSubcategories] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const filters = [
+    {
+      id: "category",
+      name: "Category",
+      options: categories,
+    },
+    {
+      id: "subcategory",
+      name: "subcategory",
+      options: subcategories,
+    },
+    {
+      id: "brand",
+      name: "brand",
+      options: brands,
+    },
+  ];
+
   const handleFilter = (e, section, option) => {
-    console.log(e.target.checked);
     const newFilter = { ...filter };
-    if (e.target.checked) {
-      if (newFilter[section.id]) {
+
+    // Handle category selection
+    if (section.id === "category") {
+      // Set the selected category to only the currently selected one
+      setSelectedCategory(option.value);
+      newFilter[section.id] = [option.value]; // Overwrite the category array with the selected option
+
+      // Reset subcategories and brands when the category changes
+      newFilter["subcategory"] = []; // Clear subcategories
+      newFilter["brand"] = []; // Clear brands
+
+      // Fetch subcategories and brands based on the selected category
+      fetchSubcategories(option.id);
+      fetchBrands(option.id);
+    }
+    // Handle brands filter
+    else if (section.id === "brand") {
+      if (e.target.checked) {
+        // Add the brand if checked
+        newFilter[section.id] = newFilter[section.id] || [];
         newFilter[section.id].push(option.value);
       } else {
-        newFilter[section.id] = [option.value];
+        // Remove the brand if unchecked
+        newFilter[section.id] = newFilter[section.id].filter(
+          (value) => value !== option.value
+        );
       }
-    } else {
-      const index = newFilter[section.id].findIndex(
-        (el) => el === option.value
-      );
-      newFilter[section.id].splice(index, 1);
     }
-    console.log({ newFilter });
+    // Handle other filters (subcategories, etc.)
+    else {
+      if (e.target.checked) {
+        newFilter[section.id] = newFilter[section.id] || [];
+        newFilter[section.id].push(option.value);
+      } else {
+        newFilter[section.id] = newFilter[section.id].filter(
+          (value) => value !== option.value
+        );
+      }
+    }
 
-    setFilter(newFilter);
+    console.log(newFilter);
+
+    setFilter(newFilter); // Update the filter state
+  };
+
+  const fetchSubcategories = async (categoryId) => {
+    const response = await dispatch(fetchSubcategoriesAsync(categoryId));
+    if (response.meta.requestStatus === "fulfilled") {
+      const fetchedSubcategories = response.payload; // Get the payload from the response
+      // console.log("Fetched subcategories:", fetchedSubcategories); // Log the response
+
+      // Check if the fetched data is an array before setting it
+      if (Array.isArray(fetchedSubcategories)) {
+        setSubcategories(fetchedSubcategories);
+      } else {
+        console.error("Expected an array but got:", fetchedSubcategories);
+        setSubcategories([]); // Reset to an empty array if the response is not valid
+      }
+    }
+  };
+  const fetchBrands = async (categoryId) => {
+    const response = await dispatch(fetchBrandsAsync(categoryId)); // Fix here
+    if (response.meta.requestStatus === "fulfilled") {
+      const fetchedBrands = response.payload;
+
+      if (Array.isArray(fetchedBrands)) {
+        setBrands(fetchedBrands);
+      } else {
+        console.error("Expected an array but got:", fetchedBrands);
+        setBrands([]);
+      }
+    }
   };
 
   const handleSort = (e, option) => {
@@ -92,7 +168,9 @@ export default function AdminProductList() {
 
   useEffect(() => {
     const pagination = { _page: page, _limit: ITEMS_PER_PAGE };
-    dispatch(fetchProductsByFiltersAsync({ filter, sort, pagination, admin:true }));
+    dispatch(
+      fetchProductsByFiltersAsync({ filter, sort, pagination, admin: true })
+    );
   }, [dispatch, filter, sort, page]);
 
   useEffect(() => {
@@ -100,7 +178,6 @@ export default function AdminProductList() {
   }, [totalItems, sort]);
 
   useEffect(() => {
-    dispatch(fetchBrandsAsync());
     dispatch(fetchCategoriesAsync());
   }, []);
 
@@ -150,10 +227,10 @@ export default function AdminProductList() {
                               onClick={(e) => handleSort(e, option)}
                               className={classNames(
                                 option.current
-                                  ? 'font-medium text-gray-900'
-                                  : 'text-gray-500',
-                                active ? 'bg-gray-100' : '',
-                                'block px-4 py-2 text-sm'
+                                  ? "font-medium text-gray-900"
+                                  : "text-gray-500",
+                                active ? "bg-gray-100" : "",
+                                "block px-4 py-2 text-sm"
                               )}
                             >
                               {option.name}
@@ -229,6 +306,7 @@ function MobileFilter({
   setMobileFiltersOpen,
   handleFilter,
   filters,
+  selectedCategory,
 }) {
   return (
     <Transition.Root show={mobileFiltersOpen} as={Fragment}>
@@ -278,6 +356,7 @@ function MobileFilter({
                   <Disclosure
                     as="div"
                     key={section.id}
+                    defaultOpen={true}
                     className="border-t border-gray-200 px-4 py-6"
                   >
                     {({ open }) => (
@@ -309,17 +388,33 @@ function MobileFilter({
                                 key={option.value}
                                 className="flex items-center"
                               >
-                                <input
-                                  id={`filter-mobile-${section.id}-${optionIdx}`}
-                                  name={`${section.id}[]`}
-                                  defaultValue={option.value}
-                                  type="checkbox"
-                                  defaultChecked={option.checked}
-                                  onChange={(e) =>
-                                    handleFilter(e, section, option)
-                                  }
-                                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                />
+                                {section.id === "category" ? (
+                                  // Use checked for category options
+                                  <input
+                                    id={`filter-mobile-${section.id}-${optionIdx}`}
+                                    name={`${section.id}[]`}
+                                    value={option.value}
+                                    type="checkbox"
+                                    checked={selectedCategory === option.value}
+                                    onChange={(e) =>
+                                      handleFilter(e, section, option)
+                                    }
+                                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                  />
+                                ) : (
+                                  // Use defaultChecked for other options
+                                  <input
+                                    id={`filter-mobile-${section.id}-${optionIdx}`}
+                                    name={`${section.id}[]`}
+                                    value={option.value}
+                                    type="checkbox"
+                                    defaultChecked={option.checked}
+                                    onChange={(e) =>
+                                      handleFilter(e, section, option)
+                                    }
+                                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                  />
+                                )}
                                 <label
                                   htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
                                   className="ml-3 min-w-0 flex-1 text-gray-500"
@@ -343,13 +438,19 @@ function MobileFilter({
   );
 }
 
-function DesktopFilter({ handleFilter, filters }) {
+function DesktopFilter({
+  handleFilter,
+  filters,
+  selectedCategory,
+  subcategories,
+}) {
   return (
     <form className="hidden lg:block">
       {filters.map((section) => (
         <Disclosure
           as="div"
           key={section.id}
+          defaultOpen={true}
           className="border-b border-gray-200 py-6"
         >
           {({ open }) => (
@@ -372,15 +473,29 @@ function DesktopFilter({ handleFilter, filters }) {
                 <div className="space-y-4">
                   {section.options.map((option, optionIdx) => (
                     <div key={option.value} className="flex items-center">
-                      <input
-                        id={`filter-${section.id}-${optionIdx}`}
-                        name={`${section.id}[]`}
-                        defaultValue={option.value}
-                        type="checkbox"
-                        defaultChecked={option.checked}
-                        onChange={(e) => handleFilter(e, section, option)}
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
+                      {section.id === "category" ? (
+                        // Use checked for category options
+                        <input
+                          id={`filter-${section.id}-${optionIdx}`}
+                          name={`${section.id}[]`}
+                          value={option.value}
+                          type="checkbox"
+                          checked={selectedCategory === option.value}
+                          onChange={(e) => handleFilter(e, section, option)}
+                          className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                        />
+                      ) : (
+                        // Use defaultChecked for other options
+                        <input
+                          id={`filter-${section.id}-${optionIdx}`}
+                          name={`${section.id}[]`}
+                          value={option.value}
+                          type="checkbox"
+                          defaultChecked={option.checked}
+                          onChange={(e) => handleFilter(e, section, option)}
+                          className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                        />
+                      )}
                       <label
                         htmlFor={`filter-${section.id}-${optionIdx}`}
                         className="ml-3 text-sm text-gray-600"
@@ -420,16 +535,16 @@ function Pagination({ page, setPage, handlePage, totalItems }) {
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
           <p className="text-sm text-gray-700">
-            Showing{' '}
+            Showing{" "}
             <span className="font-medium">
               {(page - 1) * ITEMS_PER_PAGE + 1}
-            </span>{' '}
-            to{' '}
+            </span>{" "}
+            to{" "}
             <span className="font-medium">
               {page * ITEMS_PER_PAGE > totalItems
                 ? totalItems
                 : page * ITEMS_PER_PAGE}
-            </span>{' '}
+            </span>{" "}
             of <span className="font-medium">{totalItems}</span> results
           </p>
         </div>
@@ -454,8 +569,8 @@ function Pagination({ page, setPage, handlePage, totalItems }) {
                 aria-current="page"
                 className={`relative cursor-pointer z-10 inline-flex items-center ${
                   index + 1 === page
-                    ? 'bg-indigo-600 text-white'
-                    : 'text-gray-400'
+                    ? "bg-indigo-600 text-white"
+                    : "text-gray-400"
                 } px-4 py-2 text-sm font-semibold  focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
               >
                 {index + 1}
@@ -483,7 +598,7 @@ function ProductGrid({ products }) {
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
           {products.map((product) => (
             <div key={product.id}>
-              <Link to={`/product-detail/${product.id}`} >
+              <Link to={`/product-detail/${product.id}`}>
                 <div className="group relative border-solid border-2 p-2 border-gray-200">
                   <div className="min-h-60 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-60">
                     <img
@@ -510,8 +625,7 @@ function ProductGrid({ products }) {
                     </div>
                     <div>
                       <p className="text-sm block font-medium text-gray-900">
-                        $
-                        {product.discountPrice}
+                        ${product.discountPrice}
                       </p>
                       <p className="text-sm block line-through font-medium text-gray-400">
                         ${product.price}
@@ -523,11 +637,11 @@ function ProductGrid({ products }) {
                       <p className="text-sm text-red-400">product deleted</p>
                     </div>
                   )}
-                  {product.stock<=0 && (
-                  <div>
-                    <p className="text-sm text-red-400">out of stock</p>
-                  </div>
-                )}
+                  {product.stock <= 0 && (
+                    <div>
+                      <p className="text-sm text-red-400">out of stock</p>
+                    </div>
+                  )}
                 </div>
               </Link>
               <div className="mt-5">
