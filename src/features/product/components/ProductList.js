@@ -91,12 +91,16 @@ export default function ProductList() {
       setSelectedCategory(option.value);
       newFilter[section.id] = [option.value]; // Overwrite the category array with the selected option
 
+      // Reset subcategories and brands when the category changes
+      newFilter["subcategory"] = []; // Clear subcategories
+      newFilter["brand"] = []; // Clear brands
+
       // Fetch subcategories and brands based on the selected category
       fetchSubcategories(option.id);
       fetchBrands(option.id);
     }
     // Handle brands filter
-    else if (section.id === "brands") {
+    else if (section.id === "brand") {
       if (e.target.checked) {
         // Add the brand if checked
         newFilter[section.id] = newFilter[section.id] || [];
@@ -119,6 +123,7 @@ export default function ProductList() {
         );
       }
     }
+
     console.log(newFilter);
 
     setFilter(newFilter); // Update the filter state
@@ -143,7 +148,6 @@ export default function ProductList() {
     const response = await dispatch(fetchBrandsAsync(categoryId)); // Fix here
     if (response.meta.requestStatus === "fulfilled") {
       const fetchedBrands = response.payload;
-      console.log("Fetched brands:", fetchedBrands);
 
       if (Array.isArray(fetchedBrands)) {
         setBrands(fetchedBrands);
