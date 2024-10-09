@@ -68,9 +68,9 @@ export function fetchCategories() {
   });
 }
 
-export function fetchBrands() {
+export function fetchBrands(categoryId) {
   return new Promise(async (resolve) => {
-    const response = await fetch("/brands");
+    const response = await fetch(`/brands?categoryId=${categoryId}`);
     const data = await response.json();
     resolve({ data });
   });

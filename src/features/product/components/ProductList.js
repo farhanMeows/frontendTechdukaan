@@ -53,22 +53,10 @@ function classNames(...classes) {
 export default function ProductList() {
   const dispatch = useDispatch();
   const products = useSelector(selectAllProducts);
-  const brands = useSelector(selectBrands);
+  // const brands = useSelector(selectBrands);
   const categories = useSelector(selectCategories);
   const totalItems = useSelector(selectTotalItems);
   const status = useSelector(selectProductListStatus);
-  const filters = [
-    {
-      id: "category",
-      name: "Category",
-      options: categories,
-    },
-    {
-      id: "brand",
-      name: "Brands",
-      options: brands,
-    },
-  ];
 
   const [filter, setFilter] = useState({});
   const [sort, setSort] = useState({});
@@ -76,15 +64,32 @@ export default function ProductList() {
   const [page, setPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [subcategories, setSubcategories] = useState([]);
-
+  const [brands, setBrands] = useState([]);
+  const filters = [
+    {
+      id: "category",
+      name: "Category",
+      options: categories,
+    },
+    {
+      id: "subcategory",
+      name: "subcategory",
+      options: subcategories,
+    },
+    {
+      id: "brands",
+      name: "brands",
+      options: brands,
+    },
+  ];
   const handleFilter = (e, section, option) => {
     const newFilter = { ...filter };
-
+    console.log(option.value);
     // Check if the section is 'category' and handle subcategory fetching
     if (section.id === "category") {
-      console.log(option.id);
       setSelectedCategory(option.value); // Store the selected category
       fetchSubcategories(option.id); // Fetch subcategories for the selected category
+      fetchBrands(option.id);
     }
 
     // Update the filter state based on checkbox selection
@@ -111,7 +116,7 @@ export default function ProductList() {
     const response = await dispatch(fetchSubcategoriesAsync(categoryId));
     if (response.meta.requestStatus === "fulfilled") {
       const fetchedSubcategories = response.payload; // Get the payload from the response
-      console.log("Fetched subcategories:", fetchedSubcategories); // Log the response
+      // console.log("Fetched subcategories:", fetchedSubcategories); // Log the response
 
       // Check if the fetched data is an array before setting it
       if (Array.isArray(fetchedSubcategories)) {
@@ -119,6 +124,20 @@ export default function ProductList() {
       } else {
         console.error("Expected an array but got:", fetchedSubcategories);
         setSubcategories([]); // Reset to an empty array if the response is not valid
+      }
+    }
+  };
+  const fetchBrands = async (categoryId) => {
+    const response = await dispatch(fetchBrandsAsync(categoryId)); // Fix here
+    if (response.meta.requestStatus === "fulfilled") {
+      const fetchedBrands = response.payload;
+      console.log("Fetched brands:", fetchedBrands);
+
+      if (Array.isArray(fetchedBrands)) {
+        setBrands(fetchedBrands);
+      } else {
+        console.error("Expected an array but got:", fetchedBrands);
+        setBrands([]);
       }
     }
   };
@@ -144,7 +163,6 @@ export default function ProductList() {
   }, [totalItems, sort]);
 
   useEffect(() => {
-    dispatch(fetchBrandsAsync());
     dispatch(fetchCategoriesAsync());
   }, []);
 
@@ -454,7 +472,7 @@ function DesktopFilter({
                       handleFilter(
                         e,
                         { id: "subcategory" },
-                        { value: subcat.id, label: subcat.name }
+                        { value: subcat.id, label: subcat.label }
                       )
                     }
                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
@@ -463,8 +481,6 @@ function DesktopFilter({
                     htmlFor={`filter-subcategory-${index}`}
                     className="ml-3 text-sm text-gray-600"
                   >
-                    {console.log(subcat.label)}
-
                     {subcat.label}
                   </label>
                 </div>
