@@ -8,6 +8,7 @@ import {
   createProduct,
   updateProduct,
   fetchSubcategoriesByCategoryId,
+  fetchSpecifications,
 } from "./productAPI";
 
 const initialState = {
@@ -47,6 +48,14 @@ export const fetchBrandsAsync = createAsyncThunk(
   "product/fetchBrands",
   async (categoryId) => {
     const response = await fetchBrands(categoryId);
+    // The value we return becomes the `fulfilled` action payload
+    return response.data;
+  }
+);
+export const fetchSpecificationsAsync = createAsyncThunk(
+  "product/fetchSpecifications",
+  async (categoryId) => {
+    const response = await fetchSpecifications(categoryId);
     // The value we return becomes the `fulfilled` action payload
     return response.data;
   }
@@ -126,6 +135,14 @@ export const productSlice = createSlice({
         state.status = "idle";
         state.subcategories = action.payload;
       })
+      .addCase(fetchSpecificationsAsync.pending, (state) => {
+        state.status = "loading";
+      })
+
+      .addCase(fetchSpecificationsAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.subcategories = action.payload;
+      })
 
       .addCase(fetchProductByIdAsync.pending, (state) => {
         state.status = "loading";
@@ -162,6 +179,7 @@ export const selectAllProducts = (state) => state.product.products;
 export const selectBrands = (state) => state.product.brands;
 export const selectCategories = (state) => state.product.categories;
 export const selectSubcategories = (state) => state.products.subcategories;
+export const selectSpecifications = (state) => state.products.specifications;
 export const selectProductById = (state) => state.product.selectedProduct;
 export const selectProductListStatus = (state) => state.product.status;
 

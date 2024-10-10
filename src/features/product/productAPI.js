@@ -84,3 +84,11 @@ export function fetchSubcategoriesByCategoryId(categoryId) {
     resolve({ data });
   });
 }
+
+export function fetchSpecifications(categoryId) {
+  return new Promise(async (resolve) => {
+    const response = await fetch(`/specifications?categoryId=${categoryId}`);
+    const data = await response.json();
+    resolve({ data });
+  });
+}

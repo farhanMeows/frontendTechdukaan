@@ -4,6 +4,7 @@ import {
   fetchBrandsAsync,
   fetchCategoriesAsync,
   fetchProductsByFiltersAsync,
+  fetchSpecificationsAsync,
   fetchSubcategoriesAsync, // Add import for fetching subcategories
   selectAllProducts,
   selectBrands,
@@ -29,6 +30,7 @@ import {
 import { ITEMS_PER_PAGE } from "../../../app/constants";
 import Pagination from "../../common/Pagination";
 import { Grid } from "react-loader-spinner";
+import { fetchSpecifications } from "../productAPI";
 
 const sortOptions = [
   { name: "Best Rating", sort: "rating", order: "desc", current: false },
@@ -65,6 +67,7 @@ export default function ProductList() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [subcategories, setSubcategories] = useState([]);
   const [brands, setBrands] = useState([]);
+  const [specifications, setSpecifications] = useState([]);
   const filters = [
     {
       id: "category",
@@ -81,6 +84,11 @@ export default function ProductList() {
       name: "brand",
       options: brands,
     },
+    {
+      id: "specification",
+      name: "specification",
+      options: specifications,
+    },
   ];
   const handleFilter = (e, section, option) => {
     const newFilter = { ...filter };
@@ -94,10 +102,12 @@ export default function ProductList() {
       // Reset subcategories and brands when the category changes
       newFilter["subcategory"] = []; // Clear subcategories
       newFilter["brand"] = []; // Clear brands
+      newFilter["specification"] = []; // Clear brands
 
       // Fetch subcategories and brands based on the selected category
       fetchSubcategories(option.id);
       fetchBrands(option.id);
+      fetchSpecifications(option.id);
     }
     // Handle brands filter
     else if (section.id === "brand") {
@@ -154,6 +164,20 @@ export default function ProductList() {
       } else {
         console.error("Expected an array but got:", fetchedBrands);
         setBrands([]);
+      }
+    }
+  };
+  const fetchSpecifications = async (categoryId) => {
+    const response = await dispatch(fetchSpecificationsAsync(categoryId)); // Fix here
+    if (response.meta.requestStatus === "fulfilled") {
+      const fetchedSpecifications = response.payload;
+
+      if (Array.isArray(fetchedSpecifications)) {
+        setSpecifications(fetchedSpecifications);
+        console.log("speci :", specifications);
+      } else {
+        console.error("Expected an array but got:", fetchedSpecifications);
+        setSpecifications([]);
       }
     }
   };
