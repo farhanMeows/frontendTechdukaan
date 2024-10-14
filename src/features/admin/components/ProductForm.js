@@ -1,6 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchBrandsAsync,
+  fetchRamsAsync,
+  fetchProcessorsAsync,
   clearSelectedProduct,
   createProductAsync,
   fetchProductByIdAsync,
@@ -16,6 +18,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Modal from "../../common/Modal";
 import { useAlert } from "react-alert";
+import { ServerStackIcon } from "@heroicons/react/24/outline";
 
 function ProductForm() {
   const {
@@ -32,6 +35,8 @@ function ProductForm() {
   const [openModal, setOpenModal] = useState(false);
   const alert = useAlert();
   const [brands, setBrands] = useState([]);
+  const [rams, setRams] = useState([]);
+  const [processors, setProcessors] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
   const [specifications, setSpecifications] = useState([]);
 
@@ -81,6 +86,8 @@ function ProductForm() {
       fetchBrands(categoryId);
       fetchSubcategories(categoryId);
       fetchSpecifications(categoryId);
+      fetchProcessors(categoryId);
+      fetchRams(categoryId);
     }
   };
   const fetchBrands = async (categoryId) => {
@@ -89,12 +96,33 @@ function ProductForm() {
       const fetchedBrands = response.payload;
       if (Array.isArray(fetchedBrands)) {
         setBrands(fetchedBrands);
-        console.log(categories);
-
-        console.log(brands);
       } else {
         console.error("Expected an array but got:", fetchedBrands);
         setBrands([]);
+      }
+    }
+  };
+  const fetchRams = async (categoryId) => {
+    const response = await dispatch(fetchRamsAsync(categoryId));
+    if (response.meta.requestStatus === "fulfilled") {
+      const fetchedRams = response.payload;
+      if (Array.isArray(fetchedRams)) {
+        setRams(fetchedRams);
+      } else {
+        console.error("Expected an array but got:", fetchedRams);
+        setRams([]);
+      }
+    }
+  };
+  const fetchProcessors = async (categoryId) => {
+    const response = await dispatch(fetchProcessorsAsync(categoryId));
+    if (response.meta.requestStatus === "fulfilled") {
+      const fetchedProcessors = response.payload;
+      if (Array.isArray(fetchedProcessors)) {
+        setProcessors(fetchedProcessors);
+      } else {
+        console.error("Expected an array but got:", fetchedProcessors);
+        setProcessors([]);
       }
     }
   };
@@ -140,6 +168,8 @@ function ProductForm() {
       // setValue("category", selectedProduct.category);
       setValue("subcategory", selectedProduct.subcategory);
       setValue("specifications", selectedProduct.specifications);
+      setValue("ram", selectedProduct.rams);
+      setValue("processor", selectedProduct.processors);
       setValue("highlight1", selectedProduct.highlights[0]);
       setValue("highlight2", selectedProduct.highlights[1]);
       setValue("highlight3", selectedProduct.highlights[2]);
@@ -275,7 +305,7 @@ function ProductForm() {
                 </p>
               </div>
 
-              <div className="col-span-full">
+              {/* <div className="col-span-full">
                 <label
                   htmlFor="colors"
                   className="block text-sm font-medium leading-6 text-gray-900"
@@ -295,9 +325,9 @@ function ProductForm() {
                     </>
                   ))}
                 </div>
-              </div>
+              </div> */}
 
-              <div className="col-span-full">
+              {/* <div className="col-span-full">
                 <label
                   htmlFor="sizes"
                   className="block text-sm font-medium leading-6 text-gray-900"
@@ -317,7 +347,7 @@ function ProductForm() {
                     </>
                   ))}
                 </div>
-              </div>
+              </div> */}
 
               <div className="sm:col-span-2">
                 <label
@@ -331,14 +361,21 @@ function ProductForm() {
                     {...register("category", {
                       required: "Category is required",
                     })}
-                    onChange={(e) => handleCategoryChange(e.target.value)}
+                    onChange={(e) => {
+                      const selectedOption =
+                        e.target.options[e.target.selectedIndex];
+                      const selectedValue = selectedOption.value;
+                      const selectedId = selectedOption.getAttribute("data-id");
+                      handleCategoryChange(selectedId); // Pass id to handleCategoryChange
+                    }}
                     id="category"
                     className="block w-full rounded-md border-0 py-1.5 pl-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                   >
                     <option value="">Choose category</option>
                     {categories.map((category) => (
                       <option
-                        value={category.id}
+                        value={category.value} // This is for form submission
+                        data-id={category.id} // This is for accessing the id in onChange
                         key={category.id}
                         className="text-black"
                       >
@@ -401,26 +438,43 @@ function ProductForm() {
 
               <div className="sm:col-span-6">
                 <label
-                  htmlFor="specification"
+                  htmlFor="ram"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  Specifications
+                  Ram
                 </label>
                 <div className="mt-2">
                   <select
-                    {...register("specifications", {
-                      required: "Specification is required",
-                    })}
+                    {...register("rams", {})}
                     id="specifications"
                     className="block w-full rounded-md border-0 py-1.5 pl-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                   >
-                    <option value="">Choose specification</option>
-                    {specifications.map((specification) => (
-                      <option
-                        value={specification.value}
-                        key={specification.id}
-                      >
-                        {specification.value}
+                    <option value="">Choose Ram</option>
+                    {rams.map((ram) => (
+                      <option value={ram.value} key={ram.id}>
+                        {ram.value}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="sm:col-span-6">
+                <label
+                  htmlFor="processors"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Processor
+                </label>
+                <div className="mt-2">
+                  <select
+                    {...register("processors", {})}
+                    id="specifications"
+                    className="block w-full rounded-md border-0 py-1.5 pl-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                  >
+                    <option value="">Choose Processor</option>
+                    {processors.map((processor) => (
+                      <option value={processor.value} key={processor.id}>
+                        {processor.value}
                       </option>
                     ))}
                   </select>
@@ -441,7 +495,7 @@ function ProductForm() {
                       {...register("price", {
                         required: "price is required",
                         min: 1,
-                        max: 10000,
+                        max: 1000000000,
                       })}
                       id="price"
                       className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
@@ -500,7 +554,7 @@ function ProductForm() {
                   htmlFor="thumbnail"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  Thumbnail
+                  Thumbnail Image
                 </label>
                 <div className="mt-2">
                   <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 ">
@@ -516,7 +570,7 @@ function ProductForm() {
                 </div>
               </div>
 
-              <div className="sm:col-span-6">
+              {/* <div className="sm:col-span-6">
                 <label
                   htmlFor="image1"
                   className="block text-sm font-medium leading-6 text-gray-900"
@@ -577,7 +631,7 @@ function ProductForm() {
                     />
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               <div className="sm:col-span-6">
                 <label
@@ -654,7 +708,7 @@ function ProductForm() {
             </div>
           </div>
 
-          <div className="border-b border-gray-900/10 pb-12">
+          {/* <div className="border-b border-gray-900/10 pb-12">
             <h2 className="text-base font-semibold leading-7 text-gray-900">
               Extra{" "}
             </h2>
@@ -732,7 +786,7 @@ function ProductForm() {
                 </div>
               </fieldset>
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div className="mt-6 flex items-center justify-end gap-x-6">

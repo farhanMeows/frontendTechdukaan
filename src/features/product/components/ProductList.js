@@ -109,6 +109,8 @@ export default function ProductList() {
       if (selectedCategory === option.value) {
         // If the category is already selected, deselect it
         setSelectedCategory("");
+        setBrands([]);
+        setProcessors([]);
         newFilter[section.id] = []; // Clear the selected category
       } else {
         // Otherwise, set the selected category

@@ -110,7 +110,7 @@ export default function ProductDetail() {
           <div className="mx-auto mt-6 px-4 max-w-full sm:px-6 lg:px-8">
             <div className="aspect-w-2 aspect-h-1 overflow-hidden rounded-lg bg-gray-200 max-w-sm lg:aspect-w-3 mx-auto">
               <img
-                src={product.images[0]} // Only display the first image
+                src={product.images[3]} // Only display the first image
                 alt={product.title}
                 className="h-full w-full object-cover object-center"
               />
