@@ -607,62 +607,54 @@ function DesktopFilter({
 function ProductGrid({ products, status }) {
   return (
     <div className="bg-white">
-      <div className="mx-auto max-w-2xl px-4 py-0 sm:px-6 sm:py-0 lg:max-w-7xl lg:px-8">
-        <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
           {status === "loading" ? (
-            <Grid
-              height="80"
-              width="80"
-              color="rgb(79, 70, 229) "
-              ariaLabel="grid-loading"
-              radius="12.5"
-              wrapperStyle={{}}
-              wrapperClass=""
-              visible={true}
-            />
+            <div className="col-span-full flex justify-center py-12">
+              <Grid
+                height="80"
+                width="80"
+                color="rgb(79, 70, 229)"
+                ariaLabel="grid-loading"
+                radius="12.5"
+                visible={true}
+              />
+            </div>
           ) : null}
+
           {products.map((product) => (
             <Link to={`/product-detail/${product.id}`} key={product.id}>
-              <div className="group relative border-solid border-2 p-2 border-gray-200">
-                <div className="min-h-60 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-60">
+              <div className="group relative border-solid border p-4 rounded-lg shadow-lg transition hover:shadow-xl">
+                <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-gray-100 group-hover:opacity-90">
                   <img
                     src={product.thumbnail}
                     alt={product.title}
-                    className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+                    className="h-full w-full object-cover object-center"
                   />
                 </div>
-                <div className="mt-4 flex justify-between">
-                  <div>
-                    <h3 className="text-sm text-gray-700">
-                      <div href={product.thumbnail}>
-                        <span aria-hidden="true" className="absolute inset-0" />
-                        {product.title}
-                      </div>
-                    </h3>
-                    <p className="mt-1 text-sm text-gray-500">
-                      <StarIcon className="w-6 h-6 inline"></StarIcon>
-                      <span className=" align-bottom">{product.rating}</span>
+                <div className="mt-4 flex flex-col">
+                  <h3 className="text-lg font-medium text-gray-900 truncate">
+                    {product.title}
+                  </h3>
+                  <p className="mt-1 flex items-center text-yellow-500">
+                    {/* <StarIcon className="w-5 h-5" /> */}
+                    {/* <span className="ml-1 text-sm">{product.rating}</span> */}
+                  </p>
+                  <div className="mt-2 flex justify-between items-center">
+                    <p className="text-lg font-semibold text-gray-900">
+                      ₹{product.discountPrice}
+                    </p>
+                    <p className="text-sm line-through text-gray-500">
+                      ₹{product.price}
                     </p>
                   </div>
-                  <div>
-                    <p className="text-sm block font-medium text-gray-900">
-                      ${product.discountPrice}
-                    </p>
-                    <p className="text-sm block line-through font-medium text-gray-400">
-                      ${product.price}
-                    </p>
-                  </div>
+                  {product.deleted && (
+                    <p className="mt-2 text-sm text-red-500">Product deleted</p>
+                  )}
+                  {product.stock <= 0 && (
+                    <p className="mt-2 text-sm text-red-500">Out of stock</p>
+                  )}
                 </div>
-                {product.deleted && (
-                  <div>
-                    <p className="text-sm text-red-400">product deleted</p>
-                  </div>
-                )}
-                {product.stock <= 0 && (
-                  <div>
-                    <p className="text-sm text-red-400">out of stock</p>
-                  </div>
-                )}
               </div>
             </Link>
           ))}
