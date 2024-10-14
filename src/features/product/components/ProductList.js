@@ -2,12 +2,16 @@ import React, { useState, Fragment, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   fetchBrandsAsync,
+  fetchRamsAsync,
+  fetchProcessorsAsync,
   fetchCategoriesAsync,
   fetchProductsByFiltersAsync,
   fetchSpecificationsAsync,
   fetchSubcategoriesAsync, // Add import for fetching subcategories
   selectAllProducts,
   selectBrands,
+  selectRams,
+  selectProcessors,
   selectCategories,
   selectProductListStatus,
   selectTotalItems,
@@ -67,6 +71,8 @@ export default function ProductList() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [subcategories, setSubcategories] = useState([]);
   const [brands, setBrands] = useState([]);
+  const [rams, setRams] = useState([]);
+  const [processors, setProcessors] = useState([]);
   const [specifications, setSpecifications] = useState([]);
   const filters = [
     {
@@ -76,18 +82,23 @@ export default function ProductList() {
     },
     {
       id: "subcategory",
-      name: "subcategory",
+      name: "Subcategory",
       options: subcategories,
     },
     {
       id: "brand",
-      name: "brand",
+      name: "Brand",
       options: brands,
     },
     {
-      id: "specification",
-      name: "specification",
-      options: specifications,
+      id: "ram",
+      name: "Ram",
+      options: rams,
+    },
+    {
+      id: "processor",
+      name: "Processor",
+      options: processors,
     },
   ];
   const handleFilter = (e, section, option) => {
@@ -95,19 +106,30 @@ export default function ProductList() {
 
     // Handle category selection
     if (section.id === "category") {
-      // Set the selected category to only the currently selected one
-      setSelectedCategory(option.value);
-      newFilter[section.id] = [option.value]; // Overwrite the category array with the selected option
-
+      if (selectedCategory === option.value) {
+        // If the category is already selected, deselect it
+        setSelectedCategory("");
+        newFilter[section.id] = []; // Clear the selected category
+      } else {
+        // Otherwise, set the selected category
+        setSelectedCategory(option.value);
+        newFilter[section.id] = [option.value]; // Overwrite the category array with the selected option
+      }
       // Reset subcategories and brands when the category changes
       newFilter["subcategory"] = []; // Clear subcategories
       newFilter["brand"] = []; // Clear brands
+      newFilter["ram"] = []; // Clear brands
+      newFilter["processor"] = []; // Clear brands
       newFilter["specification"] = []; // Clear brands
 
       // Fetch subcategories and brands based on the selected category
       fetchSubcategories(option.id);
       fetchBrands(option.id);
-      fetchSpecifications(option.id);
+      fetchRams(option.id);
+      fetchProcessors(option.id);
+      // console.log("ram", rams);
+
+      // fetchSpecifications(option.id);
     }
     // Handle brands filter
     else if (section.id === "brand") {
@@ -133,8 +155,6 @@ export default function ProductList() {
         );
       }
     }
-
-    console.log(newFilter);
 
     setFilter(newFilter); // Update the filter state
   };
@@ -167,6 +187,39 @@ export default function ProductList() {
       }
     }
   };
+  const fetchRams = async (categoryId) => {
+    console.log("callwd");
+
+    const response = await dispatch(fetchRamsAsync(categoryId)); // Fix here
+    if (response.meta.requestStatus === "fulfilled") {
+      const fetchedRams = response.payload;
+
+      if (Array.isArray(fetchedRams)) {
+        setRams(fetchedRams);
+        console.log("calkesd");
+      } else {
+        console.error("Expected an array but got:", fetchedRams);
+        setRams([]);
+      }
+    }
+  };
+
+  const fetchProcessors = async (categoryId) => {
+    console.log("callwd");
+
+    const response = await dispatch(fetchProcessorsAsync(categoryId)); // Fix here
+    if (response.meta.requestStatus === "fulfilled") {
+      const fetchedProcessors = response.payload;
+
+      if (Array.isArray(fetchedProcessors)) {
+        setProcessors(fetchedProcessors);
+        console.log("calkesd");
+      } else {
+        console.error("Expected an array but got:", fetchedProcessors);
+        setProcessors([]);
+      }
+    }
+  };
   const fetchSpecifications = async (categoryId) => {
     const response = await dispatch(fetchSpecificationsAsync(categoryId)); // Fix here
     if (response.meta.requestStatus === "fulfilled") {
@@ -174,7 +227,6 @@ export default function ProductList() {
 
       if (Array.isArray(fetchedSpecifications)) {
         setSpecifications(fetchedSpecifications);
-        console.log("speci :", specifications);
       } else {
         console.error("Expected an array but got:", fetchedSpecifications);
         setSpecifications([]);
@@ -195,7 +247,17 @@ export default function ProductList() {
 
   useEffect(() => {
     const pagination = { _page: page, _limit: ITEMS_PER_PAGE };
-    dispatch(fetchProductsByFiltersAsync({ filter, sort, pagination }));
+
+    // Check if any filters are applied by checking the filter values
+    const isFilterApplied = Object.values(filter).some((f) => f.length > 0);
+
+    if (!isFilterApplied) {
+      // No filters applied, fetch all products
+      dispatch(fetchProductsByFiltersAsync({ sort, pagination }));
+    } else {
+      // Fetch products based on the applied filters
+      dispatch(fetchProductsByFiltersAsync({ filter, sort, pagination }));
+    }
   }, [dispatch, filter, sort, page]);
 
   useEffect(() => {
@@ -215,6 +277,7 @@ export default function ProductList() {
           setMobileFiltersOpen={setMobileFiltersOpen}
           filters={filters}
           selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
         ></MobileFilter>
 
         <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -298,6 +361,7 @@ export default function ProductList() {
                 filters={filters}
                 selectedCategory={selectedCategory}
                 setSelectedCategory={setSelectedCategory}
+                filter={filter}
               ></DesktopFilter>
               {/* Product grid */}
               <div className="lg:col-span-3">
@@ -326,6 +390,8 @@ function MobileFilter({
   handleFilter,
   filters,
   selectedCategory,
+  setSelectedCategory,
+  filter,
 }) {
   return (
     <Transition.Root show={mobileFiltersOpen} as={Fragment}>
@@ -462,6 +528,8 @@ function DesktopFilter({
   filters,
   selectedCategory,
   subcategories,
+  setSelectedCategory,
+  filter,
 }) {
   return (
     <form className="hidden lg:block">
@@ -500,7 +568,10 @@ function DesktopFilter({
                           value={option.value}
                           type="checkbox"
                           checked={selectedCategory === option.value}
-                          onChange={(e) => handleFilter(e, section, option)}
+                          onChange={(e) => {
+                            // Check the checkbox (select)
+                            handleFilter(e, section, option);
+                          }}
                           className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                         />
                       ) : (

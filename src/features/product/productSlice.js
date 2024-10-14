@@ -3,18 +3,21 @@ import {
   fetchAllProducts,
   fetchProductsByFilters,
   fetchBrands,
+  fetchRams,
   fetchCategories,
   fetchProductById,
   createProduct,
   updateProduct,
   fetchSubcategoriesByCategoryId,
   fetchSpecifications,
+  fetchProcessors,
 } from "./productAPI";
 
 const initialState = {
   subcategories: [],
   products: [],
   brands: [],
+  rams: [],
   categories: [],
   status: "idle",
   totalItems: 0,
@@ -48,6 +51,23 @@ export const fetchBrandsAsync = createAsyncThunk(
   "product/fetchBrands",
   async (categoryId) => {
     const response = await fetchBrands(categoryId);
+    // The value we return becomes the `fulfilled` action payload
+    return response.data;
+  }
+);
+export const fetchProcessorsAsync = createAsyncThunk(
+  "product/fetchProcessors",
+  async (categoryId) => {
+    const response = await fetchProcessors(categoryId);
+    // The value we return becomes the `fulfilled` action payload
+    return response.data;
+  }
+);
+
+export const fetchRamsAsync = createAsyncThunk(
+  "product/fetchRams",
+  async (categoryId) => {
+    const response = await fetchRams(categoryId);
     // The value we return becomes the `fulfilled` action payload
     return response.data;
   }
@@ -120,6 +140,20 @@ export const productSlice = createSlice({
         state.status = "idle";
         state.brands = action.payload;
       })
+      .addCase(fetchRamsAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchRamsAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.rams = action.payload;
+      })
+      .addCase(fetchProcessorsAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchProcessorsAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.processors = action.payload;
+      })
       .addCase(fetchCategoriesAsync.pending, (state) => {
         state.status = "loading";
       })
@@ -177,6 +211,8 @@ export const { clearSubcategories } = productSlice.actions;
 
 export const selectAllProducts = (state) => state.product.products;
 export const selectBrands = (state) => state.product.brands;
+export const selectRams = (state) => state.product.rams;
+export const selectProcessors = (state) => state.product.processors;
 export const selectCategories = (state) => state.product.categories;
 export const selectSubcategories = (state) => state.products.subcategories;
 export const selectSpecifications = (state) => state.products.specifications;

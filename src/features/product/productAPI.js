@@ -75,6 +75,20 @@ export function fetchBrands(categoryId) {
     resolve({ data });
   });
 }
+export function fetchProcessors(categoryId) {
+  return new Promise(async (resolve) => {
+    const response = await fetch(`/processors?categoryId=${categoryId}`);
+    const data = await response.json();
+    resolve({ data });
+  });
+}
+export function fetchRams(categoryId) {
+  return new Promise(async (resolve) => {
+    const response = await fetch(`/ram?categoryId=${categoryId}`);
+    const data = await response.json();
+    resolve({ data });
+  });
+}
 // productApi.js
 
 export function fetchSubcategoriesByCategoryId(categoryId) {
