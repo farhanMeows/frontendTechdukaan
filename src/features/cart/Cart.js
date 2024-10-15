@@ -1,23 +1,23 @@
-import { Fragment, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { Fragment, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   deleteItemFromCartAsync,
   selectCartLoaded,
   selectCartStatus,
   selectItems,
   updateCartAsync,
-} from './cartSlice';
-import { Link } from 'react-router-dom';
-import { Navigate } from 'react-router-dom';
-import { Grid } from 'react-loader-spinner';
-import Modal from '../common/Modal';
+} from "./cartSlice";
+import { Link } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import { Grid } from "react-loader-spinner";
+import Modal from "../common/Modal";
 
 export default function Cart() {
   const dispatch = useDispatch();
 
   const items = useSelector(selectItems);
   const status = useSelector(selectCartStatus);
-  const cartLoaded = useSelector(selectCartLoaded)
+  const cartLoaded = useSelector(selectCartLoaded);
   const [openModal, setOpenModal] = useState(null);
 
   const totalAmount = items.reduce(
@@ -27,7 +27,7 @@ export default function Cart() {
   const totalItems = items.reduce((total, item) => item.quantity + total, 0);
 
   const handleQuantity = (e, item) => {
-    dispatch(updateCartAsync({id:item.id, quantity: +e.target.value }));
+    dispatch(updateCartAsync({ id: item.id, quantity: +e.target.value }));
   };
 
   const handleRemove = (e, id) => {
@@ -36,7 +36,9 @@ export default function Cart() {
 
   return (
     <>
-      {!items.length && cartLoaded && <Navigate to="/" replace={true}></Navigate>}
+      {!items.length && cartLoaded && (
+        <Navigate to="/" replace={true}></Navigate>
+      )}
 
       <div>
         <div className="mx-auto mt-12 bg-white max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -45,7 +47,7 @@ export default function Cart() {
               Cart
             </h1>
             <div className="flow-root">
-              {status === 'loading' ? (
+              {status === "loading" ? (
                 <Grid
                   height="80"
                   width="80"
@@ -107,11 +109,13 @@ export default function Cart() {
                             dangerOption="Delete"
                             cancelOption="Cancel"
                             dangerAction={(e) => handleRemove(e, item.id)}
-                            cancelAction={()=>setOpenModal(null)}
+                            cancelAction={() => setOpenModal(null)}
                             showModal={openModal === item.id}
                           ></Modal>
                           <button
-                            onClick={e=>{setOpenModal(item.id)}}
+                            onClick={(e) => {
+                              setOpenModal(item.id);
+                            }}
                             type="button"
                             className="font-medium text-indigo-600 hover:text-indigo-500"
                           >
@@ -149,7 +153,7 @@ export default function Cart() {
             <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
               <p>
                 or
-                <Link to="/">
+                <Link to="/shop">
                   <button
                     type="button"
                     className="font-medium text-indigo-600 hover:text-indigo-500"

@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import {
   PaymentElement,
   useStripe,
-  useElements
+  useElements,
 } from "@stripe/react-stripe-js";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 import { selectCurrentOrder } from "../features/order/orderSlice";
 
 export default function CheckoutForm() {
@@ -80,8 +80,8 @@ export default function CheckoutForm() {
   };
 
   const paymentElementOptions = {
-    layout: "tabs"
-  }
+    layout: "tabs",
+  };
 
   return (
     <form id="payment-form" onSubmit={handleSubmit}>

@@ -131,10 +131,10 @@ export default function ProductDetail() {
             {/* Pricing */}
             <div className="mt-4">
               <p className="text-xl line-through tracking-tight text-gray-500">
-                ₹{product.price}
+                ${product.price}
               </p>
               <p className="text-3xl font-semibold tracking-tight text-gray-900">
-                ₹{product.discountPrice}
+                ${product.discountPrice}
               </p>
             </div>
 

@@ -644,15 +644,12 @@ function ProductGrid({ products, status }) {
                   </p>
                   <div className="mt-2 flex justify-between items-center">
                     <p className="text-lg font-semibold text-gray-900">
-                      ₹{product.discountPrice}
+                      ${product.discountPrice}
                     </p>
                     <p className="text-sm line-through text-gray-500">
-                      ₹{product.price}
+                      ${product.price}
                     </p>
                   </div>
-                  {product.deleted && (
-                    <p className="mt-2 text-sm text-red-500">Product deleted</p>
-                  )}
                   {product.stock <= 0 && (
                     <p className="mt-2 text-sm text-red-500">Out of stock</p>
                   )}
