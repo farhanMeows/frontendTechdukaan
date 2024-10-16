@@ -88,18 +88,19 @@ function Checkout() {
       {currentOrder && currentOrder.paymentMethod === "card" && (
         <Navigate to={`/stripe-checkout/`} replace={true}></Navigate>
       )}
-
       {status === "loading" ? (
-        <Grid
-          height="80"
-          width="80"
-          color="rgb(79, 70, 229) "
-          ariaLabel="grid-loading"
-          radius="12.5"
-          wrapperStyle={{}}
-          wrapperClass=""
-          visible={true}
-        />
+        <div className="fixed inset-0 flex items-center justify-center">
+          <Grid
+            height="80"
+            width="80"
+            color="rgb(79, 70, 229)"
+            ariaLabel="grid-loading"
+            radius="12.5"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+          />
+        </div>
       ) : (
         <div className="mx-auto max-w-7xl px-10 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-5">
@@ -438,7 +439,7 @@ function Checkout() {
                                   </a>
                                 </h3>
                                 <p className="ml-4">
-                                  ${item.product.discountPrice}
+                                  ₹{item.product.discountPrice}
                                 </p>
                               </div>
                               <p className="mt-1 text-sm text-gray-500">
@@ -485,7 +486,7 @@ function Checkout() {
                 <div className="border-t border-gray-200 px-2 py-6 sm:px-2">
                   <div className="flex justify-between my-2 text-base font-medium text-gray-900">
                     <p>Subtotal</p>
-                    <p>$ {totalAmount}</p>
+                    <p>₹ {totalAmount}</p>
                   </div>
                   <div className="flex justify-between my-2 text-base font-medium text-gray-900">
                     <p>Total Items in Cart</p>

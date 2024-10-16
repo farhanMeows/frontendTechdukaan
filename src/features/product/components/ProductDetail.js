@@ -54,13 +54,15 @@ export default function ProductDetail() {
   return (
     <div className="bg-white">
       {status === "loading" ? (
-        <div className="flex justify-center py-12">
+        <div className="fixed inset-0 flex items-center justify-center">
           <Grid
             height="80"
             width="80"
             color="rgb(79, 70, 229)"
             ariaLabel="grid-loading"
             radius="12.5"
+            wrapperStyle={{}}
+            wrapperClass=""
             visible={true}
           />
         </div>
@@ -108,11 +110,11 @@ export default function ProductDetail() {
 
           {/* Single Image */}
           <div className="mx-auto mt-6 px-4 max-w-full sm:px-6 lg:px-8">
-            <div className="aspect-w-2 aspect-h-1 overflow-hidden rounded-lg bg-gray-200 max-w-sm lg:aspect-w-3 mx-auto">
+            <div className="aspect-w-1 aspect-h-1 overflow-hidden rounded-lg bg-white max-w-sm lg:aspect-w-3 mx-auto">
               <img
                 src={product.images[3]} // Only display the first image
                 alt={product.title}
-                className="h-full w-full object-cover object-center"
+                className="h-full w-full object-fill object-center"
               />
             </div>
           </div>
@@ -131,10 +133,10 @@ export default function ProductDetail() {
             {/* Pricing */}
             <div className="mt-4">
               <p className="text-xl line-through tracking-tight text-gray-500">
-                ${product.price}
+                ₹{product.price}
               </p>
               <p className="text-3xl font-semibold tracking-tight text-gray-900">
-                ${product.discountPrice}
+                ₹{product.discountPrice}
               </p>
             </div>
 

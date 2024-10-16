@@ -189,7 +189,7 @@ function AdminOrders() {
                     </td>
                     <td className="py-3 px-0 text-center">
                       <div className="flex items-center justify-center">
-                        ${order.totalAmount}
+                        ₹{order.totalAmount}
                       </div>
                     </td>
                     <td className="py-3 px-0 text-center">

@@ -2,7 +2,9 @@ import React, { useState, Fragment, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   fetchBrandsAsync,
+  fetchRamsAsync,
   fetchCategoriesAsync,
+  fetchProcessorsAsync,
   fetchProductsByFiltersAsync,
   fetchSubcategoriesAsync, // Add import for fetching subcategories
   selectAllProducts,
@@ -61,6 +63,9 @@ export default function AdminProductList() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [subcategories, setSubcategories] = useState([]);
   const [brands, setBrands] = useState([]);
+  const [rams, setRams] = useState([]);
+  const [processors, setProcessors] = useState([]);
+  const [isCustomBuilt, setIsCustomBuilt] = useState(false);
   const filters = [
     {
       id: "category",
@@ -69,32 +74,83 @@ export default function AdminProductList() {
     },
     {
       id: "subcategory",
-      name: "subcategory",
+      name: "Subcategory",
       options: subcategories,
     },
     {
       id: "brand",
-      name: "brand",
+      name: "Brand",
       options: brands,
     },
+    {
+      id: "ram",
+      name: "Ram",
+      options: rams,
+    },
+    {
+      id: "processor",
+      name: "Processor",
+      options: processors,
+    },
   ];
-
   const handleFilter = (e, section, option) => {
     const newFilter = { ...filter };
 
     // Handle category selection
     if (section.id === "category") {
-      // Set the selected category to only the currently selected one
-      setSelectedCategory(option.value);
-      newFilter[section.id] = [option.value]; // Overwrite the category array with the selected option
-
+      if (isCustomBuilt) {
+        // If "Custom Built" is already selected, deselect it
+        setIsCustomBuilt(false);
+        console.log("Deselected Custom Built");
+      }
+      if (selectedCategory === option.value) {
+        // If the category is already selected, deselect it
+        setSelectedCategory("");
+        setBrands([]);
+        setProcessors([]);
+        newFilter[section.id] = []; // Clear the selected category
+      } else {
+        // Otherwise, set the selected category
+        setSelectedCategory(option.value);
+        newFilter[section.id] = [option.value]; // Overwrite the category array with the selected option
+      }
       // Reset subcategories and brands when the category changes
-      newFilter["subcategory"] = []; // Clear subcategories
-      newFilter["brand"] = []; // Clear brands
+      newFilter["subcategory"] = [];
+      newFilter["brand"] = [];
+      newFilter["ram"] = [];
+      newFilter["processor"] = [];
+      newFilter["specification"] = [];
 
       // Fetch subcategories and brands based on the selected category
       fetchSubcategories(option.id);
       fetchBrands(option.id);
+      fetchRams(option.id);
+      fetchProcessors(option.id);
+    }
+    // Handle subcategory selection
+    else if (section.id === "subcategory") {
+      if (option.value === "Coustom Built") {
+        if (isCustomBuilt) {
+          // If "Custom Built" is already selected, deselect it
+          setIsCustomBuilt(false);
+          console.log("Deselected Custom Built");
+        } else {
+          // Otherwise, select "Custom Built"
+          setIsCustomBuilt(true);
+          console.log("Selected Custom Built");
+        }
+      } else {
+        if (e.target.checked) {
+          // Add the subcategory if checked
+          newFilter[section.id] = newFilter[section.id] || [];
+          newFilter[section.id].push(option.value);
+        } else {
+          // Remove the subcategory if unchecked
+          newFilter[section.id] = newFilter[section.id].filter(
+            (value) => value !== option.value
+          );
+        }
+      }
     }
     // Handle brands filter
     else if (section.id === "brand") {
@@ -109,7 +165,7 @@ export default function AdminProductList() {
         );
       }
     }
-    // Handle other filters (subcategories, etc.)
+    // Handle other filters (ram, processors, etc.)
     else {
       if (e.target.checked) {
         newFilter[section.id] = newFilter[section.id] || [];
@@ -120,8 +176,6 @@ export default function AdminProductList() {
         );
       }
     }
-
-    console.log(newFilter);
 
     setFilter(newFilter); // Update the filter state
   };
@@ -154,7 +208,39 @@ export default function AdminProductList() {
       }
     }
   };
+  const fetchRams = async (categoryId) => {
+    console.log("callwd");
 
+    const response = await dispatch(fetchRamsAsync(categoryId)); // Fix here
+    if (response.meta.requestStatus === "fulfilled") {
+      const fetchedRams = response.payload;
+
+      if (Array.isArray(fetchedRams)) {
+        setRams(fetchedRams);
+        console.log("calkesd");
+      } else {
+        console.error("Expected an array but got:", fetchedRams);
+        setRams([]);
+      }
+    }
+  };
+
+  const fetchProcessors = async (categoryId) => {
+    console.log("callwd");
+
+    const response = await dispatch(fetchProcessorsAsync(categoryId)); // Fix here
+    if (response.meta.requestStatus === "fulfilled") {
+      const fetchedProcessors = response.payload;
+
+      if (Array.isArray(fetchedProcessors)) {
+        setProcessors(fetchedProcessors);
+        console.log("calkesd");
+      } else {
+        console.error("Expected an array but got:", fetchedProcessors);
+        setProcessors([]);
+      }
+    }
+  };
   const handleSort = (e, option) => {
     const sort = { _sort: option.sort, _order: option.order };
     console.log({ sort });
@@ -602,11 +688,11 @@ function ProductGrid({ products }) {
               <div key={product.id}>
                 <Link to={`/product-detail/${product.id}`}>
                   <div className="group relative border-solid border-2 p-2 border-gray-200">
-                    <div className="min-h-60 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-60">
+                    <div className="min-h-60 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-white lg:aspect-none group-hover:opacity-75 lg:h-60">
                       <img
                         src={product.thumbnail}
                         alt={product.title}
-                        className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+                        className="h-full w-full object-fill object-center lg:h-full lg:w-full"
                       />
                     </div>
                     <div className="mt-4 flex justify-between">
@@ -620,17 +706,14 @@ function ProductGrid({ products }) {
                             {product.title}
                           </div>
                         </h3>
-                        <p className="mt-1 text-sm text-gray-500">
-                          <StarIcon className="w-6 h-6 inline"></StarIcon>
-                          <span className="align-bottom">{product.rating}</span>
-                        </p>
+                        <p className="mt-1 text-sm text-gray-500"></p>
                       </div>
                       <div>
                         <p className="text-sm block font-medium text-gray-900">
-                          ${product.discountPrice}
+                          ₹{product.discountPrice}
                         </p>
-                        <p className="text-sm block line-through font-medium text-gray-400">
-                          ${product.price}
+                        <p className="text-xs block line-through font-medium text-gray-400">
+                          ₹{product.price}
                         </p>
                       </div>
                     </div>

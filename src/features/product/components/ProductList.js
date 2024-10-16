@@ -74,6 +74,7 @@ export default function ProductList() {
   const [rams, setRams] = useState([]);
   const [processors, setProcessors] = useState([]);
   const [specifications, setSpecifications] = useState([]);
+  const [isCustomBuilt, setIsCustomBuilt] = useState(false);
   const filters = [
     {
       id: "category",
@@ -106,6 +107,11 @@ export default function ProductList() {
 
     // Handle category selection
     if (section.id === "category") {
+      if (isCustomBuilt) {
+        // If "Custom Built" is already selected, deselect it
+        setIsCustomBuilt(false);
+        console.log("Deselected Custom Built");
+      }
       if (selectedCategory === option.value) {
         // If the category is already selected, deselect it
         setSelectedCategory("");
@@ -118,20 +124,42 @@ export default function ProductList() {
         newFilter[section.id] = [option.value]; // Overwrite the category array with the selected option
       }
       // Reset subcategories and brands when the category changes
-      newFilter["subcategory"] = []; // Clear subcategories
-      newFilter["brand"] = []; // Clear brands
-      newFilter["ram"] = []; // Clear brands
-      newFilter["processor"] = []; // Clear brands
-      newFilter["specification"] = []; // Clear brands
+      newFilter["subcategory"] = [];
+      newFilter["brand"] = [];
+      newFilter["ram"] = [];
+      newFilter["processor"] = [];
+      newFilter["specification"] = [];
 
       // Fetch subcategories and brands based on the selected category
       fetchSubcategories(option.id);
       fetchBrands(option.id);
       fetchRams(option.id);
       fetchProcessors(option.id);
-      // console.log("ram", rams);
-
-      // fetchSpecifications(option.id);
+    }
+    // Handle subcategory selection
+    else if (section.id === "subcategory") {
+      if (option.value === "Coustom Built") {
+        if (isCustomBuilt) {
+          // If "Custom Built" is already selected, deselect it
+          setIsCustomBuilt(false);
+          console.log("Deselected Custom Built");
+        } else {
+          // Otherwise, select "Custom Built"
+          setIsCustomBuilt(true);
+          console.log("Selected Custom Built");
+        }
+      } else {
+        if (e.target.checked) {
+          // Add the subcategory if checked
+          newFilter[section.id] = newFilter[section.id] || [];
+          newFilter[section.id].push(option.value);
+        } else {
+          // Remove the subcategory if unchecked
+          newFilter[section.id] = newFilter[section.id].filter(
+            (value) => value !== option.value
+          );
+        }
+      }
     }
     // Handle brands filter
     else if (section.id === "brand") {
@@ -146,7 +174,7 @@ export default function ProductList() {
         );
       }
     }
-    // Handle other filters (subcategories, etc.)
+    // Handle other filters (ram, processors, etc.)
     else {
       if (e.target.checked) {
         newFilter[section.id] = newFilter[section.id] || [];
@@ -367,7 +395,11 @@ export default function ProductList() {
               ></DesktopFilter>
               {/* Product grid */}
               <div className="lg:col-span-3">
-                <ProductGrid products={products} status={status}></ProductGrid>
+                <ProductGrid
+                  products={products}
+                  status={status}
+                  isCustomBuilt={isCustomBuilt}
+                ></ProductGrid>
               </div>
               {/* Product grid end */}
             </div>
@@ -606,58 +638,69 @@ function DesktopFilter({
   );
 }
 
-function ProductGrid({ products, status }) {
+function ProductGrid({ products, status, isCustomBuilt }) {
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
-          {status === "loading" ? (
-            <div className="col-span-full flex justify-center py-12">
+        {isCustomBuilt ? (
+          // WebView or iframe for 'Custom Built' option
+          <div className="w-full h-full flex justify-center items-center">
+            <iframe
+              src="https://forms.gle/uwFXfiKHNd53Zojv5"
+              title="Custom Built Products"
+              className="w-full h-screen border-none"
+            />
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
+            {status === "loading" ? (
               <Grid
                 height="80"
                 width="80"
-                color="rgb(79, 70, 229)"
+                color="rgb(79, 70, 229) "
                 ariaLabel="grid-loading"
                 radius="12.5"
+                wrapperStyle={{}}
+                wrapperClass=""
                 visible={true}
               />
-            </div>
-          ) : null}
+            ) : null}
 
-          {products.map((product) => (
-            <Link to={`/product-detail/${product.id}`} key={product.id}>
-              <div className="group relative border-solid border p-4 rounded-lg shadow-lg transition hover:shadow-xl">
-                <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-gray-100 group-hover:opacity-90">
-                  <img
-                    src={product.thumbnail}
-                    alt={product.title}
-                    className="h-full w-full object-cover object-center"
-                  />
-                </div>
-                <div className="mt-4 flex flex-col">
-                  <h3 className="text-lg font-medium text-gray-900 truncate">
-                    {product.title}
-                  </h3>
-                  <p className="mt-1 flex items-center text-yellow-500">
-                    {/* <StarIcon className="w-5 h-5" /> */}
-                    {/* <span className="ml-1 text-sm">{product.rating}</span> */}
-                  </p>
-                  <div className="mt-2 flex justify-between items-center">
-                    <p className="text-lg font-semibold text-gray-900">
-                      ${product.discountPrice}
-                    </p>
-                    <p className="text-sm line-through text-gray-500">
-                      ${product.price}
-                    </p>
+            {products.map((product) => (
+              <Link to={`/product-detail/${product.id}`} key={product.id}>
+                <div className="group relative border-solid border p-4 rounded-lg shadow-lg transition hover:shadow-xl">
+                  <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-white group-hover:opacity-90">
+                    <img
+                      src={product.thumbnail}
+                      alt={product.title}
+                      className="h-full w-full object-contain object-center"
+                    />
                   </div>
-                  {product.stock <= 0 && (
-                    <p className="mt-2 text-sm text-red-500">Out of stock</p>
-                  )}
+                  <div className="mt-4 flex flex-col">
+                    <h3 className="text-lg font-medium text-gray-900 truncate">
+                      {product.title}
+                    </h3>
+                    <p className="mt-1 flex items-center text-yellow-500">
+                      {/* <StarIcon className="w-5 h-5" /> */}
+                      {/* <span className="ml-1 text-sm">{product.rating}</span> */}
+                    </p>
+                    <div className="mt-2 flex justify-between items-center">
+                      <p className="text-sm font-semibold text-gray-900">
+                        ₹{product.discountPrice}
+                      </p>
+                      <p className="text-xs line-through text-gray-500">
+                        ₹{product.price}
+                      </p>
+                    </div>
+                    {product.stock <= 0 && (
+                      <p className="mt-2 text-sm text-red-500">Out of stock</p>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
