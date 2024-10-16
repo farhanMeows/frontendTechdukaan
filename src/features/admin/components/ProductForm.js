@@ -40,26 +40,26 @@ function ProductForm() {
   const [subcategories, setSubcategories] = useState([]);
   const [specifications, setSpecifications] = useState([]);
 
-  const colors = [
-    {
-      name: "White",
-      class: "bg-white",
-      selectedClass: "ring-gray-400",
-      id: "white",
-    },
-    {
-      name: "Gray",
-      class: "bg-gray-200",
-      selectedClass: "ring-gray-400",
-      id: "gray",
-    },
-    {
-      name: "Black",
-      class: "bg-gray-900",
-      selectedClass: "ring-gray-900",
-      id: "black",
-    },
-  ];
+  // const colors = [
+  //   {
+  //     name: "White",
+  //     class: "bg-white",
+  //     selectedClass: "ring-gray-400",
+  //     id: "white",
+  //   },
+  //   {
+  //     name: "Gray",
+  //     class: "bg-gray-200",
+  //     selectedClass: "ring-gray-400",
+  //     id: "gray",
+  //   },
+  //   {
+  //     name: "Black",
+  //     class: "bg-gray-900",
+  //     selectedClass: "ring-gray-900",
+  //     id: "black",
+  //   },
+  // ];
 
   const sizes = [
     { name: "XXS", inStock: true, id: "xxs" },
@@ -166,28 +166,33 @@ function ProductForm() {
       setValue("image3", selectedProduct.images[2]);
       // setValue("brand", selectedProduct.brand);
       // setValue("category", selectedProduct.category);
-      setValue("subcategory", selectedProduct.subcategory);
-      setValue("specifications", selectedProduct.specifications);
-      setValue("ram", selectedProduct.rams);
+      setValue("Subcategory", selectedProduct.subcategory);
+      setValue("Ram", selectedProduct.rams);
       setValue("processor", selectedProduct.processors);
       setValue("highlight1", selectedProduct.highlights[0]);
       setValue("highlight2", selectedProduct.highlights[1]);
       setValue("highlight3", selectedProduct.highlights[2]);
       setValue("highlight4", selectedProduct.highlights[3]);
-      setValue(
-        "sizes",
-        selectedProduct.sizes.map((size) => size.id)
-      );
-      setValue(
-        "colors",
-        selectedProduct.colors.map((color) => color.id)
-      );
+      // setValue(
+      //   "sizes",
+      //   selectedProduct.sizes.map((size) => size.id)
+      // );
+      // setValue(
+      //   "colors",
+      //   selectedProduct.colors.map((color) => color.id)
+      // );
     }
   }, [selectedProduct, params.id, setValue]);
 
   const handleDelete = () => {
     const product = { ...selectedProduct };
     product.deleted = true;
+    dispatch(updateProductAsync(product));
+  };
+
+  const handleUpdateDeleted = () => {
+    const product = { ...selectedProduct };
+    product.deleted = false;
     dispatch(updateProductAsync(product));
   };
 
@@ -200,9 +205,9 @@ function ProductForm() {
           const product = { ...data };
 
           product.images = [
-            product.image1,
-            product.image2,
-            product.image3,
+            // product.image1,
+            // product.image2,
+            // product.image3,
             product.thumbnail,
           ];
           product.highlights = [
@@ -211,20 +216,19 @@ function ProductForm() {
             product.highlight3,
             product.highlight4,
           ];
-          product.rating = 0;
-          if (product.colors) {
-            product.colors = product.colors.map((color) =>
-              colors.find((clr) => clr.id === color)
-            );
-          }
-          if (product.sizes) {
-            product.sizes = product.sizes.map((size) =>
-              sizes.find((sz) => sz.id === size)
-            );
-          }
+          // product.rating = 0;
+          // if (product.colors) {
+          //   product.colors = product.colors.map((color) =>
+          //     colors.find((clr) => clr.id === color)
+          //   );
+          // }
+          // if (product.sizes) {
+          //   product.sizes = product.sizes.map((size) =>
+          //     sizes.find((sz) => sz.id === size)
+          //   );
+          // }
           // Ensure subcategory and specification are correctly assigned
           product.subCategory = product.subcategory; // Use consistent casing if necessary
-          product.specification = product.specifications; // Handle singular case
           product.category = product.category; // Handle singular case
 
           delete product["image1"];
@@ -810,6 +814,7 @@ function ProductForm() {
           )}
 
           <button
+            onClick={handleUpdateDeleted}
             type="submit"
             className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
