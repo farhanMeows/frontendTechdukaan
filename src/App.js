@@ -35,6 +35,7 @@ import AlertTemplate from "react-alert-template-basic";
 import StripeCheckout from "./pages/StripeCheckout";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import BannerHome from "./pages/BannerHome";
+import AdminBanner from "./features/admin/components/AdminBanner";
 
 const options = {
   timeout: 5000,
@@ -152,6 +153,14 @@ const router = createBrowserRouter([
       <Protected>
         <UserProfilePage></UserProfilePage>{" "}
       </Protected>
+    ),
+  },
+  {
+    path: "/admin/banner-upload",
+    element: (
+      <ProtectedAdmin>
+        <AdminBanner />
+      </ProtectedAdmin>
     ),
   },
   {

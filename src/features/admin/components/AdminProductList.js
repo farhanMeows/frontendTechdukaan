@@ -360,16 +360,29 @@ export default function AdminProductList() {
               {/* Product grid */}
 
               <div className="lg:col-span-3">
-                <div>
-                  <Link
-                    to="/admin/product-form"
-                    className="rounded-md mx-10 my-5 bg-green-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  >
-                    Add New Product
-                  </Link>
+                <div className="flex flex-col gap-4 items-start">
+                  {" "}
+                  {/* Changed to flex-col with gap */}
+                  <div>
+                    <Link
+                      to="/admin/product-form"
+                      className="rounded-md mx-0 my-2 bg-green-700 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    >
+                      Add New Product
+                    </Link>
+                  </div>
+                  <div className="mt-2">
+                    <Link
+                      to="/admin/banner-upload"
+                      className="rounded-md mx-0 my-2 bg-green-700 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    >
+                      Upload Banner
+                    </Link>
+                  </div>
                 </div>
                 <ProductGrid products={products}></ProductGrid>
               </div>
+
               {/* Product grid end */}
             </div>
           </section>

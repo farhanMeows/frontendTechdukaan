@@ -5,6 +5,7 @@ import cartReducer from "../features/cart/cartSlice";
 import orderReducer from "../features/order/orderSlice";
 import userReducer from "../features/user/userSlice";
 import orderDetailsReducer from "../features/order/orderSliceCard/orderSlice";
+import bannerReducer from "../features/product/components/bannerSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export const store = configureStore({
     order: orderReducer,
     user: userReducer,
     orderDetails: orderDetailsReducer, // Add orderDetailsReducer here
+    banner: bannerReducer,
   },
 });
