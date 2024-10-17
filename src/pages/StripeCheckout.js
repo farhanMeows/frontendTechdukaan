@@ -21,7 +21,7 @@ export default function PhonePeCheckout() {
 
         try {
           const response = await axios.post(
-            "http://localhost:8080/create-payment-request",
+            "https://techdukaan.vercel.app/create-payment-request",
             data
           );
           console.log(response.data);

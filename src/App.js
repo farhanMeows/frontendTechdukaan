@@ -46,14 +46,6 @@ const router = createBrowserRouter([
     path: "/",
     element: (
       <Protected>
-        <BannerHome />
-      </Protected>
-    ),
-  },
-  {
-    path: "/shop",
-    element: (
-      <Protected>
         <Home></Home>
       </Protected>
     ),

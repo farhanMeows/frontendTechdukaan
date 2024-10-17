@@ -33,7 +33,7 @@ function BannerHome() {
           TODAY
         </p>
         <a
-          href="/shop"
+          href="/"
           className="bg-white text-black font-bold px-8 py-3 rounded-md text-lg hover:bg-gray-200 transition duration-300"
         >
           Shop Now

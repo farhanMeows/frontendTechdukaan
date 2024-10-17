@@ -521,7 +521,7 @@ function Checkout() {
                   <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                     <p>
                       or
-                      <Link to="/shop">
+                      <Link to="/">
                         <button
                           type="button"
                           className="font-medium text-indigo-600 hover:text-indigo-500"
