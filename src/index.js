@@ -1,18 +1,24 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { Provider } from 'react-redux';
-import { store } from './app/store';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import './index.css';
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { Provider } from "react-redux";
+import { store } from "./app/store";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import "./index.css";
+import { OrderProvider } from "./features/order/OrderContext";
+import { RecoilRoot } from "recoil";
 
-const container = document.getElementById('root');
+const container = document.getElementById("root");
 const root = createRoot(container);
 
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <OrderProvider>
+        <RecoilRoot>
+          <App />
+        </RecoilRoot>
+      </OrderProvider>
     </Provider>
   </React.StrictMode>
 );

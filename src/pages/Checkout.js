@@ -16,8 +16,14 @@ import {
 } from "../features/order/orderSlice";
 import { selectUserInfo } from "../features/user/userSlice";
 import { Grid } from "react-loader-spinner";
+import { useOrder } from "../features/order/OrderContext";
+import { setOrderDetails } from "../features/order/orderSliceCard/orderSlice";
+import { orderState } from "../features/atoms/orderAtoms";
+import { useRecoilState } from "recoil";
 
 function Checkout() {
+  // const { setOrder } = useOrder();
+
   const dispatch = useDispatch();
   const {
     register,
@@ -30,6 +36,8 @@ function Checkout() {
   const items = useSelector(selectItems);
   const status = useSelector(selectStatus);
   const currentOrder = useSelector(selectCurrentOrder);
+  // const { setOrder } = useOrder();
+  const [orderr, setOrderr] = useRecoilState(orderState); // Access the order atom
 
   const totalAmount = items.reduce(
     (amount, item) => item.product.discountPrice * item.quantity + amount,
@@ -69,7 +77,14 @@ function Checkout() {
         selectedAddress,
         status: "pending", // other status can be delivered, received.
       };
-      dispatch(createOrderAsync(order));
+      let storeOrder = order;
+      // Dispatch the createOrderAsync action and wait for it to complete
+
+      setOrderr(storeOrder);
+      console.log("stored", orderr);
+
+      dispatch(createOrderAsync(order)); // Create the order asynchronously
+      // setOrder(order); // Set the order in global state
       // need to redirect from here to a new page of order success.
     } else {
       alert("Enter Address and Payment method");

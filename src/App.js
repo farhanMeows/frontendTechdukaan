@@ -19,6 +19,7 @@ import {
 import { fetchItemsByUserIdAsync } from "./features/cart/cartSlice";
 import PageNotFound from "./pages/404";
 import OrderSuccessPage from "./pages/OrderSuccessPage";
+import OrderFailurePage from "./pages/OrderFailurePage";
 import UserOrdersPage from "./pages/UserOrdersPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import { fetchLoggedInUserAsync } from "./features/user/userSlice";
@@ -134,6 +135,14 @@ const router = createBrowserRouter([
     element: (
       <Protected>
         <OrderSuccessPage></OrderSuccessPage>{" "}
+      </Protected>
+    ),
+  },
+  {
+    path: "/order-failure",
+    element: (
+      <Protected>
+        <OrderFailurePage />
       </Protected>
     ),
   },
