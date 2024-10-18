@@ -119,6 +119,7 @@ export default function ProductList() {
 
     // Handle subcategory filter
     if (section.id === "subcategory") {
+      console.log(option.value);
       if (option.value === "Custom Built") {
         if (isCustomBuilt) {
           // Deselect "Custom Built"
@@ -130,6 +131,15 @@ export default function ProductList() {
           console.log("Selected Custom Built");
         }
       } else {
+        setIsCustomBuilt(false);
+
+        // Remove "Custom Built" if it's in the newFilter
+        if (newFilter[section.id]?.includes("Custom Built")) {
+          newFilter[section.id] = newFilter[section.id].filter(
+            (item) => item !== "Custom Built"
+          );
+        }
+
         if (e.target.checked) {
           // Add the subcategory if checked immutably
           newFilter[section.id] = [
@@ -142,11 +152,20 @@ export default function ProductList() {
             (value) => value !== option.value
           );
         }
+
+        // Uncheck the "Custom Built" checkbox if it exists
+        const customBuiltCheckbox = document.querySelector(
+          `input[value="Custom Built"]`
+        );
+        if (customBuiltCheckbox) {
+          customBuiltCheckbox.checked = false;
+        }
       }
     }
 
     // Handle brand filter
     else if (section.id === "brand") {
+      setIsCustomBuilt(false);
       if (e.target.checked) {
         // Add the brand if checked immutably
         newFilter[section.id] = [
@@ -164,6 +183,7 @@ export default function ProductList() {
     // Handle other filters (ram, processor, etc.)
     // Handle ram, processor, and specification filters
     else if (["ram", "processor", "specification"].includes(section.id)) {
+      setIsCustomBuilt(false);
       // Ensure the array for the filter is initialized
       newFilter[section.id] = newFilter[section.id] || [];
 
