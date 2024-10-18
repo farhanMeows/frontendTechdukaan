@@ -20,7 +20,7 @@ const Banner = () => {
 
   // Loading or error handling
   if (loading) {
-    return <p className="text-center">Loading banners...</p>;
+    return <p className="text-center"></p>;
   }
 
   if (error) {
@@ -29,7 +29,7 @@ const Banner = () => {
 
   // Check if banner is available
   if (!banner || Object.keys(banner).length === 0) {
-    return <p className="text-center">No banners available.</p>;
+    return <p className="text-center"></p>;
   }
 
   // Array of banner images

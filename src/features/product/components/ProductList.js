@@ -35,6 +35,13 @@ import { ITEMS_PER_PAGE } from "../../../app/constants";
 import Pagination from "../../common/Pagination";
 import { Grid } from "react-loader-spinner";
 import { fetchSpecifications } from "../productAPI";
+import {
+  selectedCategoryAtom,
+  selectedCategoryIdAtom,
+  isCategorySelectedAtom,
+  filterAtom,
+} from "../productAtoms/productAtoms";
+import { useRecoilState } from "recoil";
 
 const sortOptions = [
   { name: "Best Rating", sort: "rating", order: "desc", current: false },
@@ -64,23 +71,27 @@ export default function ProductList() {
   const totalItems = useSelector(selectTotalItems);
   const status = useSelector(selectProductListStatus);
 
-  const [filter, setFilter] = useState({});
+  const [filter, setFilter] = useRecoilState(filterAtom);
   const [sort, setSort] = useState({});
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [page, setPage] = useState(1);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  // const [selectedCategory, setSelectedCategory] = useState(null);
   const [subcategories, setSubcategories] = useState([]);
   const [brands, setBrands] = useState([]);
   const [rams, setRams] = useState([]);
   const [processors, setProcessors] = useState([]);
   const [specifications, setSpecifications] = useState([]);
   const [isCustomBuilt, setIsCustomBuilt] = useState(false);
+  const [isCategorySelected, setIsCategorySelected] = useRecoilState(
+    isCategorySelectedAtom
+  );
+  const [selectedCategory, setSelectedCategory] =
+    useRecoilState(selectedCategoryAtom);
+  const [selectedCategoryId, setSelectedCategoryId] = useRecoilState(
+    selectedCategoryIdAtom
+  );
+
   const filters = [
-    {
-      id: "category",
-      name: "Category",
-      options: categories,
-    },
     {
       id: "subcategory",
       name: "Subcategory",
@@ -103,90 +114,71 @@ export default function ProductList() {
     },
   ];
   const handleFilter = (e, section, option) => {
+    // Create a new filter object immutably
     const newFilter = { ...filter };
 
-    // Handle category selection
-    if (section.id === "category") {
-      if (isCustomBuilt) {
-        // If "Custom Built" is already selected, deselect it
-        setIsCustomBuilt(false);
-        console.log("Deselected Custom Built");
-      }
-      if (selectedCategory === option.value) {
-        // If the category is already selected, deselect it
-        setSelectedCategory("");
-        setBrands([]);
-        setProcessors([]);
-        newFilter[section.id] = []; // Clear the selected category
-      } else {
-        // Otherwise, set the selected category
-        setSelectedCategory(option.value);
-        newFilter[section.id] = [option.value]; // Overwrite the category array with the selected option
-      }
-      // Reset subcategories and brands when the category changes
-      newFilter["subcategory"] = [];
-      newFilter["brand"] = [];
-      newFilter["ram"] = [];
-      newFilter["processor"] = [];
-      newFilter["specification"] = [];
-
-      // Fetch subcategories and brands based on the selected category
-      fetchSubcategories(option.id);
-      fetchBrands(option.id);
-      fetchRams(option.id);
-      fetchProcessors(option.id);
-    }
-    // Handle subcategory selection
-    else if (section.id === "subcategory") {
-      if (option.value === "Coustom Built") {
+    // Handle subcategory filter
+    if (section.id === "subcategory") {
+      if (option.value === "Custom Built") {
         if (isCustomBuilt) {
-          // If "Custom Built" is already selected, deselect it
+          // Deselect "Custom Built"
           setIsCustomBuilt(false);
           console.log("Deselected Custom Built");
         } else {
-          // Otherwise, select "Custom Built"
+          // Select "Custom Built"
           setIsCustomBuilt(true);
           console.log("Selected Custom Built");
         }
       } else {
         if (e.target.checked) {
-          // Add the subcategory if checked
-          newFilter[section.id] = newFilter[section.id] || [];
-          newFilter[section.id].push(option.value);
+          // Add the subcategory if checked immutably
+          newFilter[section.id] = [
+            ...(newFilter[section.id] || []),
+            option.value,
+          ];
         } else {
-          // Remove the subcategory if unchecked
+          // Remove the subcategory if unchecked immutably
           newFilter[section.id] = newFilter[section.id].filter(
             (value) => value !== option.value
           );
         }
       }
     }
-    // Handle brands filter
+
+    // Handle brand filter
     else if (section.id === "brand") {
       if (e.target.checked) {
-        // Add the brand if checked
-        newFilter[section.id] = newFilter[section.id] || [];
-        newFilter[section.id].push(option.value);
+        // Add the brand if checked immutably
+        newFilter[section.id] = [
+          ...(newFilter[section.id] || []),
+          option.value,
+        ];
       } else {
-        // Remove the brand if unchecked
-        newFilter[section.id] = newFilter[section.id].filter(
-          (value) => value !== option.value
-        );
-      }
-    }
-    // Handle other filters (ram, processors, etc.)
-    else {
-      if (e.target.checked) {
-        newFilter[section.id] = newFilter[section.id] || [];
-        newFilter[section.id].push(option.value);
-      } else {
+        // Remove the brand if unchecked immutably
         newFilter[section.id] = newFilter[section.id].filter(
           (value) => value !== option.value
         );
       }
     }
 
-    setFilter(newFilter); // Update the filter state
+    // Handle other filters (ram, processor, etc.)
+    // Handle ram, processor, and specification filters
+    else if (["ram", "processor", "specification"].includes(section.id)) {
+      // Ensure the array for the filter is initialized
+      newFilter[section.id] = newFilter[section.id] || [];
+
+      if (e.target.checked) {
+        // Add the filter value if checked
+        newFilter[section.id] = [...newFilter[section.id], option.value];
+      } else {
+        // Remove the filter value if unchecked
+        newFilter[section.id] = newFilter[section.id].filter(
+          (value) => value !== option.value
+        );
+      }
+    }
+    // Update the filter state immutably
+    setFilter(newFilter);
   };
 
   const fetchSubcategories = async (categoryId) => {
@@ -218,15 +210,12 @@ export default function ProductList() {
     }
   };
   const fetchRams = async (categoryId) => {
-    console.log("callwd");
-
     const response = await dispatch(fetchRamsAsync(categoryId)); // Fix here
     if (response.meta.requestStatus === "fulfilled") {
       const fetchedRams = response.payload;
 
       if (Array.isArray(fetchedRams)) {
         setRams(fetchedRams);
-        console.log("calkesd");
       } else {
         console.error("Expected an array but got:", fetchedRams);
         setRams([]);
@@ -235,15 +224,12 @@ export default function ProductList() {
   };
 
   const fetchProcessors = async (categoryId) => {
-    console.log("callwd");
-
     const response = await dispatch(fetchProcessorsAsync(categoryId)); // Fix here
     if (response.meta.requestStatus === "fulfilled") {
       const fetchedProcessors = response.payload;
 
       if (Array.isArray(fetchedProcessors)) {
         setProcessors(fetchedProcessors);
-        console.log("calkesd");
       } else {
         console.error("Expected an array but got:", fetchedProcessors);
         setProcessors([]);
@@ -276,6 +262,10 @@ export default function ProductList() {
   };
 
   useEffect(() => {
+    fetchSubcategories(selectedCategoryId);
+    fetchBrands(selectedCategoryId);
+    fetchRams(selectedCategoryId);
+    fetchProcessors(selectedCategoryId);
     const pagination = { _page: page, _limit: ITEMS_PER_PAGE };
 
     // Check if any filters are applied by checking the filter values
@@ -288,6 +278,7 @@ export default function ProductList() {
       // Fetch products based on the applied filters
       dispatch(fetchProductsByFiltersAsync({ filter, sort, pagination }));
     }
+    console.log("filter", filter);
   }, [dispatch, filter, sort, page]);
 
   useEffect(() => {
@@ -668,7 +659,7 @@ function ProductGrid({ products, status, isCustomBuilt }) {
 
             {products.map((product) => (
               <Link to={`/product-detail/${product.id}`} key={product.id}>
-                <div className="group relative border-solid border p-4 rounded-lg shadow-lg transition hover:shadow-xl">
+                <div className="group relative border-solid border p-4 rounded-lg shadow-lg transition hover:shadow-3xl transform hover:scale-110">
                   <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-white group-hover:opacity-90">
                     <img
                       src={product.thumbnail}

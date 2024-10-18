@@ -166,9 +166,9 @@ function ProductForm() {
       setValue("image3", selectedProduct.images[2]);
       // setValue("brand", selectedProduct.brand);
       // setValue("category", selectedProduct.category);
-      setValue("Subcategory", selectedProduct.subcategory);
-      setValue("Ram", selectedProduct.rams);
-      setValue("processor", selectedProduct.processors);
+      // setValue("Subcategory", selectedProduct.subcategory);
+      // setValue("Ram", selectedProduct.ram);
+      // setValue("processor", selectedProduct.processor);
       setValue("highlight1", selectedProduct.highlights[0]);
       setValue("highlight2", selectedProduct.highlights[1]);
       setValue("highlight3", selectedProduct.highlights[2]);
@@ -230,6 +230,10 @@ function ProductForm() {
           // Ensure subcategory and specification are correctly assigned
           product.subCategory = product.subcategory; // Use consistent casing if necessary
           product.category = product.category; // Handle singular case
+          product.ram = product.ram; // Handle singular case
+          console.log(product.ram);
+
+          product.processor = product.processor; // Handle singular case
 
           delete product["image1"];
           delete product["image2"];
@@ -449,8 +453,8 @@ function ProductForm() {
                 </label>
                 <div className="mt-2">
                   <select
-                    {...register("rams", {})}
-                    id="specifications"
+                    {...register("ram", {})}
+                    id="ram"
                     className="block w-full rounded-md border-0 py-1.5 pl-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                   >
                     <option value="">Choose Ram</option>
@@ -464,15 +468,15 @@ function ProductForm() {
               </div>
               <div className="sm:col-span-6">
                 <label
-                  htmlFor="processors"
+                  htmlFor="processor"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
                   Processor
                 </label>
                 <div className="mt-2">
                   <select
-                    {...register("processors", {})}
-                    id="specifications"
+                    {...register("processor", {})}
+                    id="processor"
                     className="block w-full rounded-md border-0 py-1.5 pl-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                   >
                     <option value="">Choose Processor</option>
