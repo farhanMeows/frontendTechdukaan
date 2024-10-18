@@ -11,6 +11,12 @@ import {
   fetchSubcategoriesByCategoryId,
   fetchSpecifications,
   fetchProcessors,
+  fetchColours,
+  fetchGraphics,
+  fetchInkandcartridges,
+  fetchSize,
+  fetchStorages,
+  fetchTypes,
 } from "./productAPI";
 
 const initialState = {
@@ -51,6 +57,54 @@ export const fetchBrandsAsync = createAsyncThunk(
   "product/fetchBrands",
   async (categoryId) => {
     const response = await fetchBrands(categoryId);
+    // The value we return becomes the `fulfilled` action payload
+    return response.data;
+  }
+);
+export const fetchColoursAsync = createAsyncThunk(
+  "product/fetchColours",
+  async (categoryId) => {
+    const response = await fetchColours(categoryId);
+    // The value we return becomes the `fulfilled` action payload
+    return response.data;
+  }
+);
+export const fetchGraphicsAsync = createAsyncThunk(
+  "product/fetchGraphics",
+  async (categoryId) => {
+    const response = await fetchGraphics(categoryId);
+    // The value we return becomes the `fulfilled` action payload
+    return response.data;
+  }
+);
+export const fetchInkandcartridgesAsync = createAsyncThunk(
+  "product/fetchInkandcartridges",
+  async (categoryId) => {
+    const response = await fetchInkandcartridges(categoryId);
+    // The value we return becomes the `fulfilled` action payload
+    return response.data;
+  }
+);
+export const fetchSizeAsync = createAsyncThunk(
+  "product/fetchSize",
+  async (categoryId) => {
+    const response = await fetchSize(categoryId);
+    // The value we return becomes the `fulfilled` action payload
+    return response.data;
+  }
+);
+export const fetchStoragesAsync = createAsyncThunk(
+  "product/fetchStorages",
+  async (categoryId) => {
+    const response = await fetchStorages(categoryId);
+    // The value we return becomes the `fulfilled` action payload
+    return response.data;
+  }
+);
+export const fetchTypesAsync = createAsyncThunk(
+  "product/fetchTypes",
+  async (categoryId) => {
+    const response = await fetchTypes(categoryId);
     // The value we return becomes the `fulfilled` action payload
     return response.data;
   }
@@ -140,6 +194,48 @@ export const productSlice = createSlice({
         state.status = "idle";
         state.brands = action.payload;
       })
+      .addCase(fetchColoursAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchColoursAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.colours = action.payload;
+      })
+      .addCase(fetchGraphicsAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchGraphicsAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.graphics = action.payload;
+      })
+      .addCase(fetchInkandcartridgesAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchInkandcartridgesAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.inkandcartridges = action.payload;
+      })
+      .addCase(fetchSizeAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchSizeAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.sizes = action.payload;
+      })
+      .addCase(fetchStoragesAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchStoragesAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.storages = action.payload;
+      })
+      .addCase(fetchTypesAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchTypesAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.types = action.payload;
+      })
       .addCase(fetchRamsAsync.pending, (state) => {
         state.status = "loading";
       })
@@ -211,6 +307,12 @@ export const { clearSubcategories } = productSlice.actions;
 
 export const selectAllProducts = (state) => state.product.products;
 export const selectBrands = (state) => state.product.brands;
+export const selectColours = (state) => state.product.colours;
+export const selectGraphics = (state) => state.product.graphics;
+export const selectInkandcartridges = (state) => state.product.inkandcartridges;
+export const selectSizes = (state) => state.product.sizes;
+export const selectStorages = (state) => state.product.storages;
+export const selectTypes = (state) => state.product.types;
 export const selectRams = (state) => state.product.rams;
 export const selectProcessors = (state) => state.product.processors;
 export const selectCategories = (state) => state.product.categories;

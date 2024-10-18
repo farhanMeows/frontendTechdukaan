@@ -1,6 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchBrandsAsync,
+  fetchColoursAsync,
+  fetchGraphicsAsync,
+  fetchInkandcartridgesAsync,
+  fetchSizeAsync,
+  fetchStoragesAsync,
+  fetchTypesAsync,
   fetchRamsAsync,
   fetchProcessorsAsync,
   clearSelectedProduct,
@@ -35,6 +41,12 @@ function ProductForm() {
   const [openModal, setOpenModal] = useState(false);
   const alert = useAlert();
   const [brands, setBrands] = useState([]);
+  const [colours, setColours] = useState([]);
+  const [graphics, setGraphics] = useState([]);
+  const [inkandcartridges, setInkandcartridges] = useState([]);
+  const [sizes, setSizes] = useState([]);
+  const [storages, setStorages] = useState([]);
+  const [types, setTypes] = useState([]);
   const [rams, setRams] = useState([]);
   const [processors, setProcessors] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
@@ -61,17 +73,6 @@ function ProductForm() {
   //   },
   // ];
 
-  const sizes = [
-    { name: "XXS", inStock: true, id: "xxs" },
-    { name: "XS", inStock: true, id: "xs" },
-    { name: "S", inStock: true, id: "s" },
-    { name: "M", inStock: true, id: "m" },
-    { name: "L", inStock: true, id: "l" },
-    { name: "XL", inStock: true, id: "xl" },
-    { name: "2XL", inStock: true, id: "2xl" },
-    { name: "3XL", inStock: true, id: "3xl" },
-  ];
-
   useEffect(() => {
     if (params.id) {
       dispatch(fetchProductByIdAsync(params.id));
@@ -88,6 +89,92 @@ function ProductForm() {
       fetchSpecifications(categoryId);
       fetchProcessors(categoryId);
       fetchRams(categoryId);
+      fetchColours(categoryId);
+      fetchGraphics(categoryId);
+      fetchInkandcartridges(categoryId);
+      fetchSize(categoryId);
+      fetchStorages(categoryId);
+      fetchTypes(categoryId);
+    }
+  };
+
+  const fetchColours = async (categoryId) => {
+    const response = await dispatch(fetchColoursAsync(categoryId)); // Fix here
+    if (response.meta.requestStatus === "fulfilled") {
+      const fetchedColours = response.payload;
+
+      if (Array.isArray(fetchedColours)) {
+        setColours(fetchedColours);
+      } else {
+        console.error("Expected an array but got:", fetchedColours);
+        setColours([]);
+      }
+    }
+  };
+  const fetchGraphics = async (categoryId) => {
+    const response = await dispatch(fetchGraphicsAsync(categoryId)); // Fix here
+    if (response.meta.requestStatus === "fulfilled") {
+      const fetchedGraphics = response.payload;
+
+      if (Array.isArray(fetchedGraphics)) {
+        setGraphics(fetchedGraphics);
+      } else {
+        console.error("Expected an array but got:", fetchedGraphics);
+        setGraphics([]);
+      }
+    }
+  };
+  const fetchInkandcartridges = async (categoryId) => {
+    const response = await dispatch(fetchInkandcartridgesAsync(categoryId)); // Fix here
+    if (response.meta.requestStatus === "fulfilled") {
+      const fetchedInkandcartridges = response.payload;
+
+      if (Array.isArray(fetchedInkandcartridges)) {
+        setInkandcartridges(fetchedInkandcartridges);
+      } else {
+        console.error("Expected an array but got:", fetchedInkandcartridges);
+        setInkandcartridges([]);
+      }
+    }
+  };
+  const fetchSize = async (categoryId) => {
+    const response = await dispatch(fetchSizeAsync(categoryId)); // Fix here
+    if (response.meta.requestStatus === "fulfilled") {
+      const fetchedSize = response.payload;
+
+      if (Array.isArray(fetchedSize)) {
+        setSizes(fetchedSize);
+      } else {
+        console.error("Expected an array but got:", fetchedSize);
+        setSizes([]);
+      }
+    }
+  };
+
+  const fetchStorages = async (categoryId) => {
+    const response = await dispatch(fetchStoragesAsync(categoryId)); // Fix here
+    if (response.meta.requestStatus === "fulfilled") {
+      const fetchedStorages = response.payload;
+
+      if (Array.isArray(fetchedStorages)) {
+        setStorages(fetchedStorages);
+      } else {
+        console.error("Expected an array but got:", fetchedStorages);
+        setStorages([]);
+      }
+    }
+  };
+  const fetchTypes = async (categoryId) => {
+    const response = await dispatch(fetchTypesAsync(categoryId)); // Fix here
+    if (response.meta.requestStatus === "fulfilled") {
+      const fetchedTypes = response.payload;
+
+      if (Array.isArray(fetchedTypes)) {
+        setTypes(fetchedTypes);
+      } else {
+        console.error("Expected an array but got:", fetchedTypes);
+        setTypes([]);
+      }
     }
   };
   const fetchBrands = async (categoryId) => {
@@ -411,6 +498,138 @@ function ProductForm() {
                   >
                     <option value="">Choose brand</option>
                     {brands.map((brand) => (
+                      <option value={brand.value} key={brand.id}>
+                        {brand.value}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="sm:col-span-2">
+                <label
+                  htmlFor="Colour"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Colour
+                </label>
+                <div className="mt-2">
+                  <select
+                    {...register("colour", {})}
+                    id="Colour"
+                    className="block w-full rounded-md border-0 py-1.5 pl-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                  >
+                    <option value="">Choose colour</option>
+                    {colours.map((colour) => (
+                      <option value={colour.value} key={colour.id}>
+                        {colour.value}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="sm:col-span-2">
+                <label
+                  htmlFor="graphic"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  graphic
+                </label>
+                <div className="mt-2">
+                  <select
+                    {...register("graphic", {})}
+                    id="graphic"
+                    className="block w-full rounded-md border-0 py-1.5 pl-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                  >
+                    <option value="">Choose graphic</option>
+                    {graphics.map((graphic) => (
+                      <option value={graphic.value} key={graphic.id}>
+                        {graphic.value}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="sm:col-span-2">
+                <label
+                  htmlFor="inkandcartridges"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  inkandcartridges
+                </label>
+                <div className="mt-2">
+                  <select
+                    {...register("inkandcartridges", {})}
+                    id="inkandcartridges"
+                    className="block w-full rounded-md border-0 py-1.5 pl-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                  >
+                    <option value="">Choose inkandcartridges</option>
+                    {inkandcartridges.map((brand) => (
+                      <option value={brand.value} key={brand.id}>
+                        {brand.value}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="sm:col-span-2">
+                <label
+                  htmlFor="size"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  size
+                </label>
+                <div className="mt-2">
+                  <select
+                    {...register("size", {})}
+                    id="size"
+                    className="block w-full rounded-md border-0 py-1.5 pl-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                  >
+                    <option value="">Choose size</option>
+                    {sizes.map((size) => (
+                      <option value={size.value} key={size.id}>
+                        {size.value}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="sm:col-span-2">
+                <label
+                  htmlFor="storage"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  storage
+                </label>
+                <div className="mt-2">
+                  <select
+                    {...register("storage", {})}
+                    id="storage"
+                    className="block w-full rounded-md border-0 py-1.5 pl-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                  >
+                    <option value="">Choose storage</option>
+                    {storages.map((brand) => (
+                      <option value={brand.value} key={brand.id}>
+                        {brand.value}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="sm:col-span-2">
+                <label
+                  htmlFor="type"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  type
+                </label>
+                <div className="mt-2">
+                  <select
+                    {...register("type", {})}
+                    id="type"
+                    className="block w-full rounded-md border-0 py-1.5 pl-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                  >
+                    <option value="">Choose type</option>
+                    {types.map((brand) => (
                       <option value={brand.value} key={brand.id}>
                         {brand.value}
                       </option>

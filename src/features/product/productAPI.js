@@ -106,3 +106,47 @@ export function fetchSpecifications(categoryId) {
     resolve({ data });
   });
 }
+
+export function fetchColours(categoryId) {
+  return new Promise(async (resolve) => {
+    const response = await fetch(`/colour?categoryId=${categoryId}`);
+    const data = await response.json();
+    resolve({ data });
+  });
+}
+
+export function fetchGraphics(categoryId) {
+  return new Promise(async (resolve) => {
+    const response = await fetch(`/graphics?categoryId=${categoryId}`);
+    const data = await response.json();
+    resolve({ data });
+  });
+}
+export function fetchInkandcartridges(categoryId) {
+  return new Promise(async (resolve) => {
+    const response = await fetch(`/inkandcartridges?categoryId=${categoryId}`);
+    const data = await response.json();
+    resolve({ data });
+  });
+}
+export function fetchSize(categoryId) {
+  return new Promise(async (resolve) => {
+    const response = await fetch(`/size?categoryId=${categoryId}`);
+    const data = await response.json();
+    resolve({ data });
+  });
+}
+export function fetchStorages(categoryId) {
+  return new Promise(async (resolve) => {
+    const response = await fetch(`/storages?categoryId=${categoryId}`);
+    const data = await response.json();
+    resolve({ data });
+  });
+}
+export function fetchTypes(categoryId) {
+  return new Promise(async (resolve) => {
+    const response = await fetch(`/types?categoryId=${categoryId}`);
+    const data = await response.json();
+    resolve({ data });
+  });
+}

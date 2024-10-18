@@ -55,6 +55,12 @@ function Home() {
       newFilter["ram"] = [];
       newFilter["processor"] = [];
       newFilter["specification"] = [];
+      newFilter["colour"] = [];
+      newFilter["graphic"] = [];
+      newFilter["inkandcartridges"] = [];
+      newFilter["size"] = [];
+      newFilter["storage"] = [];
+      newFilter["type"] = [];
       setIsCustomBuilt(false);
     } else {
       // Select a new category
@@ -69,6 +75,12 @@ function Home() {
       newFilter["ram"] = [];
       newFilter["processor"] = [];
       newFilter["specification"] = [];
+      newFilter["colour"] = [];
+      newFilter["graphic"] = [];
+      newFilter["inkandcartridges"] = [];
+      newFilter["size"] = [];
+      newFilter["storage"] = [];
+      newFilter["type"] = [];
       setIsCustomBuilt(false);
       // Scroll to the ProductList section
       if (productListRef.current) {
