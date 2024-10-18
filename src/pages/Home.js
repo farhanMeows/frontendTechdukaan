@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import NavBar from "../features/navbar/Navbar";
 import ProductList from "../features/product/components/ProductList";
@@ -21,7 +21,8 @@ import {
 function Home() {
   const dispatch = useDispatch();
   const categories = useSelector(selectCategories);
-
+  // Ref for scrolling to ProductList
+  const productListRef = useRef(null);
   // Recoil state management for category selection
   const [isCategorySelected, setIsCategorySelected] = useRecoilState(
     isCategorySelectedAtom
@@ -69,6 +70,10 @@ function Home() {
       newFilter["processor"] = [];
       newFilter["specification"] = [];
       setIsCustomBuilt(false);
+      // Scroll to the ProductList section
+      if (productListRef.current) {
+        productListRef.current.scrollIntoView({ behavior: "smooth" });
+      }
     }
 
     setFilter(newFilter);
@@ -84,7 +89,7 @@ function Home() {
           handleFilter={handleCategoryFilter}
         />
         <Banner />
-        <div className="flex-grow">
+        <div ref={productListRef} className="flex-grow">
           <ProductList selectedCategory={selectedCategory} />
         </div>
       </NavBar>

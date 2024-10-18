@@ -13,10 +13,21 @@ const Banner = () => {
   const loading = useSelector(selectLoading);
   const error = useSelector(selectError);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const banners = [banner.image1, banner.image2, banner.image3];
 
   useEffect(() => {
     dispatch(fetchBanner()); // Fetch banners from the API on component mount
   }, [dispatch]);
+
+  useEffect(() => {
+    // Auto-slide every 3 seconds (3000 milliseconds)
+    const autoSlide = setInterval(() => {
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % banners.length);
+    }, 3000);
+
+    // Cleanup the interval when the component unmounts
+    return () => clearInterval(autoSlide);
+  }, [banners.length]);
 
   // Loading or error handling
   if (loading) {
@@ -29,11 +40,10 @@ const Banner = () => {
 
   // Check if banner is available
   if (!banner || Object.keys(banner).length === 0) {
-    return <p className="text-center"></p>;
+    return <p className="text-center">No banners available.</p>;
   }
 
   // Array of banner images
-  const banners = [banner.image1, banner.image2, banner.image3];
 
   const handlePrevSlide = () => {
     setCurrentSlide((prevSlide) =>
@@ -47,15 +57,16 @@ const Banner = () => {
 
   return (
     <div className="relative w-full h-60 sm:h-96 overflow-hidden">
+      {/* Banner Images */}
       {banners.map((image, index) => (
         <div
-          key={index} // Use the index as a key, since the images don’t have unique ids
-          className={`absolute inset-0 transition-opacity duration-1000 ${
-            index === currentSlide ? "opacity-100" : "opacity-0"
-          }`}
+          key={index}
+          className={`absolute inset-0 transition-transform duration-1000 ease-in-out transform ${
+            index === currentSlide ? "translate-x-0" : "translate-x-full"
+          } ${index < currentSlide ? "-translate-x-full" : ""}`}
         >
           <img
-            src={image} // Use the appropriate image property
+            src={image}
             alt={`Banner ${index + 1}`}
             className="w-full h-full object-cover"
           />
@@ -65,27 +76,27 @@ const Banner = () => {
       {/* Previous Button */}
       <button
         onClick={handlePrevSlide}
-        className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 focus:outline-none"
+        className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-gray-900 bg-opacity-50 text-white p-3 rounded-full hover:bg-opacity-70 focus:outline-none transition-all duration-300 ease-in-out"
       >
-        <FaArrowLeft />
+        <FaArrowLeft size={20} />
       </button>
 
       {/* Next Button */}
       <button
         onClick={handleNextSlide}
-        className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 focus:outline-none"
+        className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-900 bg-opacity-50 text-white p-3 rounded-full hover:bg-opacity-70 focus:outline-none transition-all duration-300 ease-in-out"
       >
-        <FaArrowRight />
+        <FaArrowRight size={20} />
       </button>
 
       {/* Navigation Dots */}
       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
         {banners.map((_, index) => (
           <button
-            key={index} // Use index as a unique key
+            key={index}
             onClick={() => setCurrentSlide(index)}
-            className={`w-3 h-3 rounded-full ${
-              index === currentSlide ? "bg-white" : "bg-gray-300"
+            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              index === currentSlide ? "bg-white" : "bg-gray-400"
             }`}
           ></button>
         ))}
