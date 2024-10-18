@@ -15,6 +15,7 @@ import {
   selectedCategoryAtom,
   selectedCategoryIdAtom,
   filterAtom,
+  isCustomBuiltAtom,
 } from "../features/product/productAtoms/productAtoms";
 
 function Home() {
@@ -31,6 +32,7 @@ function Home() {
     selectedCategoryIdAtom
   );
   const [filter, setFilter] = useRecoilState(filterAtom);
+  const [isCustomBuilt, setIsCustomBuilt] = useRecoilState(isCustomBuiltAtom);
 
   useEffect(() => {
     dispatch(fetchCategoriesAsync()); // Fetch categories on component mount
@@ -52,6 +54,7 @@ function Home() {
       newFilter["ram"] = [];
       newFilter["processor"] = [];
       newFilter["specification"] = [];
+      setIsCustomBuilt(false);
     } else {
       // Select a new category
       setSelectedCategory(option.value);
@@ -65,6 +68,7 @@ function Home() {
       newFilter["ram"] = [];
       newFilter["processor"] = [];
       newFilter["specification"] = [];
+      setIsCustomBuilt(false);
     }
 
     setFilter(newFilter);

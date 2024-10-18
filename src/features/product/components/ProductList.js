@@ -40,6 +40,7 @@ import {
   selectedCategoryIdAtom,
   isCategorySelectedAtom,
   filterAtom,
+  isCustomBuiltAtom,
 } from "../productAtoms/productAtoms";
 import { useRecoilState } from "recoil";
 
@@ -81,7 +82,7 @@ export default function ProductList() {
   const [rams, setRams] = useState([]);
   const [processors, setProcessors] = useState([]);
   const [specifications, setSpecifications] = useState([]);
-  const [isCustomBuilt, setIsCustomBuilt] = useState(false);
+  const [isCustomBuilt, setIsCustomBuilt] = useRecoilState(isCustomBuiltAtom);
   const [isCategorySelected, setIsCategorySelected] = useRecoilState(
     isCategorySelectedAtom
   );

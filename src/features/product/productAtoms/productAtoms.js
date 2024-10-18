@@ -21,3 +21,8 @@ export const filterAtom = atom({
   key: "filterAtom", // unique ID
   default: {}, // default value (initially no category ID is selected)
 });
+
+export const isCustomBuiltAtom = atom({
+  key: "isCustomBuiltAtom", // unique ID (with respect to other atoms/selectors)
+  default: false, // default value (initially no category is selected)
+});
