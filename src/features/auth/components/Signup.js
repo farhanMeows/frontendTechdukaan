@@ -2,8 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 
 import { selectLoggedInUser, createUserAsync } from "../authSlice";
-import { Link } from "react-router-dom";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 export default function Signup() {
   const dispatch = useDispatch();
@@ -18,22 +17,25 @@ export default function Signup() {
   return (
     <>
       {user && <Navigate to="/" replace={true}></Navigate>}
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img
-            className="mx-auto h-10 w-auto"
-            src="/ecommerce.png"
-            alt="Your Company"
-          />
-          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Create a New Account
+      <div className="flex min-h-full flex-1 flex-col justify-center items-center bg-gray-50 py-12 px-6 lg:px-8">
+        <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
+          <div className="flex justify-center mb-8">
+            <img
+              className="h-12 w-auto"
+              src="/ecommerce.png"
+              alt="TechDukaan"
+            />
+          </div>
+          <h2 className="text-center text-3xl font-extrabold text-gray-900">
+            Join TechDukaan
           </h2>
-        </div>
+          <p className="text-center text-sm text-gray-600 mt-2">
+            Create an account and start shopping today
+          </p>
 
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form
             noValidate
-            className="space-y-6"
+            className="space-y-6 mt-8"
             onSubmit={handleSubmit((data) => {
               dispatch(
                 createUserAsync({
@@ -49,43 +51,45 @@ export default function Signup() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium leading-6 text-gray-900"
+                className="block text-sm font-medium text-gray-700"
               >
                 Email address
               </label>
-              <div className="mt-2">
+              <div className="mt-1">
                 <input
                   id="email"
                   {...register("email", {
-                    required: "email is required",
+                    required: "Email is required",
                     pattern: {
                       value: /\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi,
-                      message: "email not valid",
+                      message: "Email not valid",
                     },
                   })}
                   type="email"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-lg border border-gray-300 p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
                 {errors.email && (
-                  <p className="text-red-500">{errors.email.message}</p>
+                  <p className="mt-2 text-sm text-red-600">
+                    {errors.email.message}
+                  </p>
                 )}
               </div>
             </div>
 
             <div>
-              <div className="flex items-center justify-between">
+              <div className="flex justify-between">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-sm font-medium text-gray-700"
                 >
                   Password
                 </label>
               </div>
-              <div className="mt-2">
+              <div className="mt-1">
                 <input
                   id="password"
                   {...register("password", {
-                    required: "password is required",
+                    required: "Password is required",
                     pattern: {
                       value:
                         /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm,
@@ -95,36 +99,38 @@ export default function Signup() {
                     },
                   })}
                   type="password"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-lg border border-gray-300 p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
                 {errors.password && (
-                  <p className="text-red-500">{errors.password.message}</p>
+                  <p className="mt-2 text-sm text-red-600">
+                    {errors.password.message}
+                  </p>
                 )}
               </div>
             </div>
 
             <div>
-              <div className="flex items-center justify-between">
+              <div className="flex justify-between">
                 <label
-                  htmlFor="password"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-medium text-gray-700"
                 >
                   Confirm Password
                 </label>
               </div>
-              <div className="mt-2">
+              <div className="mt-1">
                 <input
                   id="confirmPassword"
                   {...register("confirmPassword", {
-                    required: "confirm password is required",
+                    required: "Confirm password is required",
                     validate: (value, formValues) =>
-                      value === formValues.password || "password not matching",
+                      value === formValues.password || "Passwords do not match",
                   })}
                   type="password"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-lg border border-gray-300 p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
                 {errors.confirmPassword && (
-                  <p className="text-red-500">
+                  <p className="mt-2 text-sm text-red-600">
                     {errors.confirmPassword.message}
                   </p>
                 )}
@@ -134,20 +140,17 @@ export default function Signup() {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="w-full bg-indigo-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
               >
                 Sign Up
               </button>
             </div>
           </form>
 
-          <p className="mt-10 text-center text-sm text-gray-500">
-            Already a Member?{" "}
-            <Link
-              to="/login"
-              className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
-            >
-              Log In
+          <p className="mt-6 text-center text-sm text-gray-500">
+            Already a member?{" "}
+            <Link to="/login" className="text-indigo-600 hover:text-indigo-500">
+              Log in
             </Link>
           </p>
         </div>

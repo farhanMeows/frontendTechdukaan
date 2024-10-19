@@ -90,9 +90,6 @@ function ProductForm() {
       const fetchedBrands = response.payload;
       if (Array.isArray(fetchedBrands)) {
         setBrands(fetchedBrands);
-        console.log(categories);
-
-        console.log(brands);
       } else {
         console.error("Expected an array but got:", fetchedBrands);
         setBrands([]);

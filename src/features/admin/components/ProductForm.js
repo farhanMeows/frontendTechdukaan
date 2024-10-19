@@ -474,7 +474,7 @@ function ProductForm() {
                         key={category.id}
                         className="text-black"
                       >
-                        {category.value}
+                        {category.label}
                       </option>
                     ))}
                   </select>
@@ -499,7 +499,7 @@ function ProductForm() {
                     <option value="">Choose brand</option>
                     {brands.map((brand) => (
                       <option value={brand.value} key={brand.id}>
-                        {brand.value}
+                        {brand.label}
                       </option>
                     ))}
                   </select>
@@ -521,7 +521,7 @@ function ProductForm() {
                     <option value="">Choose colour</option>
                     {colours.map((colour) => (
                       <option value={colour.value} key={colour.id}>
-                        {colour.value}
+                        {colour.label}
                       </option>
                     ))}
                   </select>
@@ -543,7 +543,7 @@ function ProductForm() {
                     <option value="">Choose graphic</option>
                     {graphics.map((graphic) => (
                       <option value={graphic.value} key={graphic.id}>
-                        {graphic.value}
+                        {graphic.label}
                       </option>
                     ))}
                   </select>
@@ -565,7 +565,7 @@ function ProductForm() {
                     <option value="">Choose inkandcartridges</option>
                     {inkandcartridges.map((brand) => (
                       <option value={brand.value} key={brand.id}>
-                        {brand.value}
+                        {brand.label}
                       </option>
                     ))}
                   </select>
@@ -587,7 +587,7 @@ function ProductForm() {
                     <option value="">Choose size</option>
                     {sizes.map((size) => (
                       <option value={size.value} key={size.id}>
-                        {size.value}
+                        {size.label}
                       </option>
                     ))}
                   </select>
@@ -609,7 +609,7 @@ function ProductForm() {
                     <option value="">Choose storage</option>
                     {storages.map((brand) => (
                       <option value={brand.value} key={brand.id}>
-                        {brand.value}
+                        {brand.label}
                       </option>
                     ))}
                   </select>
@@ -631,7 +631,7 @@ function ProductForm() {
                     <option value="">Choose type</option>
                     {types.map((brand) => (
                       <option value={brand.value} key={brand.id}>
-                        {brand.value}
+                        {brand.label}
                       </option>
                     ))}
                   </select>
@@ -647,16 +647,14 @@ function ProductForm() {
                 </label>
                 <div className="mt-2">
                   <select
-                    {...register("subcategory", {
-                      required: "Subcategory is required",
-                    })}
+                    {...register("subcategory", {})}
                     id="subcategory"
                     className="block w-full rounded-md border-0 py-1.5 pl-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                   >
                     <option value="">Choose subcategory</option>
                     {subcategories.map((subcategory) => (
                       <option value={subcategory.value} key={subcategory.id}>
-                        {subcategory.value}
+                        {subcategory.label}
                       </option>
                     ))}
                   </select>
@@ -679,7 +677,7 @@ function ProductForm() {
                     <option value="">Choose Ram</option>
                     {rams.map((ram) => (
                       <option value={ram.value} key={ram.id}>
-                        {ram.value}
+                        {ram.label}
                       </option>
                     ))}
                   </select>
@@ -701,7 +699,7 @@ function ProductForm() {
                     <option value="">Choose Processor</option>
                     {processors.map((processor) => (
                       <option value={processor.value} key={processor.id}>
-                        {processor.value}
+                        {processor.label}
                       </option>
                     ))}
                   </select>

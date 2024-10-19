@@ -13,7 +13,12 @@ const Banner = () => {
   const loading = useSelector(selectLoading);
   const error = useSelector(selectError);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const banners = [banner.image1, banner.image2, banner.image3];
+
+  // Ensure the banner data exists and contains the necessary images
+  const banners =
+    banner && banner.image1
+      ? [banner.image1, banner.image2, banner.image3]
+      : [];
 
   useEffect(() => {
     dispatch(fetchBanner()); // Fetch banners from the API on component mount
@@ -21,12 +26,14 @@ const Banner = () => {
 
   useEffect(() => {
     // Auto-slide every 3 seconds (3000 milliseconds)
-    const autoSlide = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % banners.length);
-    }, 3000);
+    if (banners.length > 0) {
+      const autoSlide = setInterval(() => {
+        setCurrentSlide((prevSlide) => (prevSlide + 1) % banners.length);
+      }, 3000);
 
-    // Cleanup the interval when the component unmounts
-    return () => clearInterval(autoSlide);
+      // Cleanup the interval when the component unmounts
+      return () => clearInterval(autoSlide);
+    }
   }, [banners.length]);
 
   // Loading or error handling
@@ -38,12 +45,21 @@ const Banner = () => {
     return <p className="text-red-500 text-center">{error}</p>;
   }
 
-  // Check if banner is available
-  if (!banner || Object.keys(banner).length === 0) {
+  // Check if banners array is empty
+  if (banners.length === 0) {
     return <p className="text-center">No banners available.</p>;
   }
 
-  // Array of banner images
+  // Sliding logic: banners slide from the right and enter from the left
+  const slideStyle = (index) => {
+    if (index === currentSlide) {
+      return "translate-x-0"; // The active slide stays in place
+    }
+    if (index > currentSlide) {
+      return "translate-x-full"; // Future slides start from the right
+    }
+    return "-translate-x-full"; // Past slides move to the left
+  };
 
   const handlePrevSlide = () => {
     setCurrentSlide((prevSlide) =>
@@ -61,9 +77,9 @@ const Banner = () => {
       {banners.map((image, index) => (
         <div
           key={index}
-          className={`absolute inset-0 transition-transform duration-1000 ease-in-out transform ${
-            index === currentSlide ? "translate-x-0" : "translate-x-full"
-          } ${index < currentSlide ? "-translate-x-full" : ""}`}
+          className={`absolute inset-0 transition-transform duration-1000 ease-in-out transform ${slideStyle(
+            index
+          )}`}
         >
           <img
             src={image}
