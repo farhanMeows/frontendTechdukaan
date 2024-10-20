@@ -50,9 +50,9 @@ function NavBar({ children }) {
                           />
                         </Link>
                       </div>
-                      <div className="hidden md:block">
-                        <div className="ml-10 flex items-baseline space-x-4">
-                          <h1 className="text-3xl font-bold mt-0 tracking-tight text-gray-200">
+                      <div className="block">
+                        <div className=" ml-2 md:ml-5 flex items-baseline space-x-4">
+                          <h1 className="text-lg md:text-3xl font-bold mt-0 tracking-tight text-gray-200">
                             TechDukaan
                           </h1>
                           {navigation.map((item) =>

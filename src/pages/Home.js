@@ -84,7 +84,7 @@ function Home() {
       setIsCustomBuilt(false);
       // Scroll to the ProductList section
       if (productListRef.current) {
-        const offset = -100; // Adjust this value as needed to scroll above the ref
+        const offset = -40; // Adjust this value as needed to scroll above the ref
         const topPosition =
           productListRef.current.getBoundingClientRect().top +
           window.scrollY +

@@ -2,7 +2,7 @@ import React from "react";
 
 const CategoriesBar = ({ categories, selectedCategory, handleFilter }) => {
   return (
-    <div className="flex overflow-x-auto overflow-y-hidden bg-gradient-to-r justify-center from-blue-500 via-purple-600 to-indigo-600 p-4 sticky top-0 z-10 shadow-lg space-x-2">
+    <div className="flex overflow-x-auto overflow-y-hidden bg-gradient-to-r z-50 justify-center from-blue-500 via-purple-600 to-indigo-600 p-4 sticky top-0  shadow-lg space-x-2">
       <div className="flex space-x-4 min-w-full sm:min-w-min">
         {categories.map((category) => (
           <button

@@ -470,7 +470,7 @@ export default function ProductList() {
             </h1>
 
             <div className="flex items-center">
-              <Menu as="div" className="relative inline-block text-left">
+              <Menu as="div" className="relative z-10 inline-block text-left">
                 <div>
                   <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-400 hover:text-indigo-400">
                     Sort
@@ -602,7 +602,7 @@ function MobileFilter({
             leaveFrom="translate-x-0"
             leaveTo="translate-x-full"
           >
-            <Dialog.Panel className="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-gray-900 py-4 pb-12 shadow-xl">
+            <Dialog.Panel className="relative ml-auto flex h-full w-full max-w-[15rem] flex-col overflow-y-auto bg-gray-900 py-4 pb-12 shadow-xl">
               <div className="flex items-center justify-between px-4">
                 <h2 className="text-lg font-medium text-indigo-400">Filters</h2>
                 <button
@@ -716,7 +716,7 @@ function DesktopFilter({
             as="div"
             key={section.id}
             defaultOpen={
-              section.id === "subcategoy" ||
+              section.id === "subcategory" ||
               section.id === "type" ||
               section.id === "brand"
             }
