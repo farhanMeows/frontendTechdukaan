@@ -162,7 +162,7 @@ export default function ProductList() {
     // Handle subcategory filter
     if (section.id === "subcategory") {
       console.log(option.value);
-      if (option.value === "Custom Built") {
+      if (option.value === "Custom Build") {
         if (isCustomBuilt) {
           // Deselect "Custom Built"
           setIsCustomBuilt(false);

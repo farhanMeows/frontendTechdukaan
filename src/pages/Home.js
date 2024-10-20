@@ -63,37 +63,65 @@ function Home() {
       newFilter["type"] = [];
       setIsCustomBuilt(false);
     } else {
-      // Select a new category
-      setSelectedCategory(option.value);
-      setSelectedCategoryId(option.id);
-      setIsCategorySelected(true);
-      newFilter["category"] = [option.value];
+      if (option.value === "Custom Build") {
+        if (isCustomBuilt) {
+          // Deselect "Custom Built"
+          setIsCustomBuilt(false);
+          console.log("Deselected Custom Built");
+        } else {
+          // Select "Custom Built"
+          setSelectedCategory("");
+          setSelectedCategoryId(null);
+          setIsCategorySelected(false);
+          newFilter["category"] = [];
+          newFilter["subcategory"] = [];
+          newFilter["brand"] = [];
+          newFilter["ram"] = [];
+          newFilter["processor"] = [];
+          newFilter["specification"] = [];
+          newFilter["colour"] = [];
+          newFilter["graphic"] = [];
+          newFilter["inkandcartridges"] = [];
+          newFilter["size"] = [];
+          newFilter["storage"] = [];
+          newFilter["type"] = [];
+          setIsCustomBuilt(true);
+          console.log("Selected Custom Built");
+        }
+      } else {
+        setIsCustomBuilt(false);
+        // Select a new category
+        setSelectedCategory(option.value);
+        setSelectedCategoryId(option.id);
+        setIsCategorySelected(true);
+        newFilter["category"] = [option.value];
 
-      // Clear other related filters when category changes
-      newFilter["subcategory"] = [];
-      newFilter["brand"] = [];
-      newFilter["ram"] = [];
-      newFilter["processor"] = [];
-      newFilter["specification"] = [];
-      newFilter["colour"] = [];
-      newFilter["graphic"] = [];
-      newFilter["inkandcartridges"] = [];
-      newFilter["size"] = [];
-      newFilter["storage"] = [];
-      newFilter["type"] = [];
-      setIsCustomBuilt(false);
-      // Scroll to the ProductList section
-      if (productListRef.current) {
-        const offset = -40; // Adjust this value as needed to scroll above the ref
-        const topPosition =
-          productListRef.current.getBoundingClientRect().top +
-          window.scrollY +
-          offset;
+        // Clear other related filters when category changes
+        newFilter["subcategory"] = [];
+        newFilter["brand"] = [];
+        newFilter["ram"] = [];
+        newFilter["processor"] = [];
+        newFilter["specification"] = [];
+        newFilter["colour"] = [];
+        newFilter["graphic"] = [];
+        newFilter["inkandcartridges"] = [];
+        newFilter["size"] = [];
+        newFilter["storage"] = [];
+        newFilter["type"] = [];
+        setIsCustomBuilt(false);
+        // Scroll to the ProductList section
+        if (productListRef.current) {
+          const offset = -40; // Adjust this value as needed to scroll above the ref
+          const topPosition =
+            productListRef.current.getBoundingClientRect().top +
+            window.scrollY +
+            offset;
 
-        window.scrollTo({
-          top: topPosition,
-          behavior: "smooth",
-        });
+          window.scrollTo({
+            top: topPosition,
+            behavior: "smooth",
+          });
+        }
       }
     }
 
