@@ -107,7 +107,7 @@ export default function ProductList() {
   const filters = [
     {
       id: "type",
-      name: "type",
+      name: "Type",
       options: types,
     },
     {
@@ -132,27 +132,27 @@ export default function ProductList() {
     },
     {
       id: "colour",
-      name: "colour",
+      name: "Colour",
       options: colours,
     },
     {
       id: "graphic",
-      name: "graphic",
+      name: "Graphic",
       options: graphics,
     },
     {
       id: "inkandcartridges",
-      name: "inkandcartridges",
+      name: "Inkandcartridges",
       options: inkandcartridges,
     },
     {
       id: "size",
-      name: "size",
+      name: "Size",
       options: sizes,
     },
     {
       id: "storage",
-      name: "storage",
+      name: "Storage",
       options: storages,
     },
   ];
@@ -490,7 +490,7 @@ export default function ProductList() {
                   leaveFrom="transform opacity-100 scale-100"
                   leaveTo="transform opacity-0 scale-95"
                 >
-                  <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-gray-800 shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <Menu.Items className="absolute right-0 z-60 mt-2 w-40 origin-top-right rounded-md bg-gray-800 shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <div className="py-1">
                       {sortOptions.map((option) => (
                         <Menu.Item key={option.name}>
@@ -572,14 +572,12 @@ function MobileFilter({
   handleFilter,
   filters,
   selectedCategory,
-  setSelectedCategory,
-  filter,
 }) {
   return (
     <Transition.Root show={mobileFiltersOpen} as={Fragment}>
       <Dialog
         as="div"
-        className="relative z-40 lg:hidden"
+        className="fixed inset-0 z-50" // Change z-60 to z-50 for consistent layering
         onClose={setMobileFiltersOpen}
       >
         <Transition.Child
@@ -594,7 +592,7 @@ function MobileFilter({
           <div className="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity" />
         </Transition.Child>
 
-        <div className="fixed inset-0 z-40 flex">
+        <div className="fixed inset-0 z-50 flex">
           <Transition.Child
             as={Fragment}
             enter="transition ease-in-out duration-300 transform"

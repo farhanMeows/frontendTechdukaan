@@ -20,14 +20,14 @@ function Footer() {
             {/* Section 2: Contact Information */}
             <div className="order-2 md:order-2 text-center md:text-left">
               <p className="font-semibold">Get in touch:</p>
-              <p>Thangal Bazar, Mg Road, Opposite to SBI, Imphal West</p>
+              <p>Thangal Bazar M.G Avenue, Near City Police</p>
               <p>
                 Email:{" "}
                 <a
-                  href="mailto:techdukaansupport@gmail.com"
+                  href="mailto:techdukaan.in@gmail.com"
                   className="text-indigo-400 hover:underline"
                 >
-                  techdukaansupport@gmail.com
+                  techdukaan.in@gmail.com
                 </a>
               </p>
               <p>Mon to Sat: 10 AM - 6 PM</p>

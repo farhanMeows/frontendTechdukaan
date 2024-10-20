@@ -52,7 +52,7 @@ export default function ProductDetail() {
   }, [dispatch, params.id]);
 
   return (
-    <div className="bg-gray-900 min-h-screen text-gray-100">
+    <div className="bg-gray-900 min-h-screen text-gray-100 ">
       {status === "loading" ? (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-80">
           <Grid
@@ -111,11 +111,11 @@ export default function ProductDetail() {
           {/* Single Image */}
           {/* Single Image */}
           <div className="mx-auto mt-6 px-4 sm:px-6 lg:px-8">
-            <div className="absolute aspect-w-1 aspect-h-1  inset-0 bg-gradient-to-r from-transparent via-transparent to-gray-900 opacity-0 hover:opacity-20 transition duration-300 ease-in-out" />
+            <div className=" inset-0 bg-gradient-to-r from-transparent via-transparent to-gray-900 opacity-0 hover:opacity-20 transition duration-300 ease-in-out" />
             <img
               src={product.thumbnail}
               alt={product.title}
-              className="h-64 lg:h-80 xl:h-96 w-full object-contain object-center rounded-lg"
+              className="h-64  lg:h-80 xl:h-96 w-full object-contain object-center rounded-lg"
             />
           </div>
 

@@ -102,18 +102,18 @@ function Home() {
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col">
-      <NavBar>
-        <CategoriesBar
-          categories={categories}
-          selectedCategory={selectedCategory}
-          categoryId={selectedCategoryId}
-          handleFilter={handleCategoryFilter}
-        />
-        <Banner productListRef={productListRef} />
-        <div ref={productListRef} className="flex-grow">
-          <ProductList selectedCategory={selectedCategory} />
-        </div>
-      </NavBar>
+      <NavBar />
+      <CategoriesBar
+        categories={categories}
+        selectedCategory={selectedCategory}
+        categoryId={selectedCategoryId}
+        handleFilter={handleCategoryFilter}
+      />
+      <Banner productListRef={productListRef} />
+      <div ref={productListRef} className="flex-grow">
+        <ProductList selectedCategory={selectedCategory} />
+      </div>
+
       <Footer />
     </div>
   );

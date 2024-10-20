@@ -421,7 +421,7 @@ function Checkout() {
                         htmlFor="cash" // Correctly reference the id of the input
                         className="ml-2 block text-sm leading-6 text-gray-100"
                       >
-                        Cash
+                        Cash On Delivery
                       </label>
                     </div>
                     <div className="flex items-center mb-4">
@@ -438,7 +438,7 @@ function Checkout() {
                         htmlFor="card" // Correctly reference the id of the input
                         className="ml-2 block text-sm leading-6 text-gray-100"
                       >
-                        Credit Card
+                        Pay Now
                       </label>
                     </div>
                     {errors.paymentMethod && (

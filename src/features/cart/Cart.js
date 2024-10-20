@@ -38,7 +38,7 @@ export default function Cart() {
     <>
       {!items.length && cartLoaded && <Navigate to="/" replace={true} />}
 
-      <div className="bg-gray-900 my-4 min-h-screen">
+      <div className="bg-gray-900 min-h-screen">
         <div className="mx-auto mt-0 max-w-3xl bg-gray-800 px-4 sm:px-6 lg:px-20 lg:py-5 shadow-lg">
           <div className=" px-4 py-6 sm:px-6">
             <h1 className="text-2xl border-b pb-2 border-gray-700  mb-10 font-bold tracking-tight text-indigo-400 text-center">

@@ -12,10 +12,11 @@ import { selectLoggedInUser } from "../auth/authSlice";
 import { selectUserInfo } from "../user/userSlice";
 
 const navigation = [
-  { name: "Products", link: "/", user: true },
-  { name: "Products", link: "/admin", admin: true },
-  { name: "Orders", link: "/admin/orders", admin: true },
+  { name: "Home", link: "/", admin: true },
+  { name: "Admin Dashboard", link: "/admin", admin: true },
+  { name: "Manage Orders", link: "/admin/orders", admin: true },
 ];
+
 const userNavigation = [
   { name: "My Profile", link: "/profile" },
   { name: "My Orders", link: "/my-orders" },
@@ -33,11 +34,8 @@ function NavBar({ children }) {
   return (
     <>
       {userInfo && (
-        <div className="min-h-full">
-          <Disclosure
-            as="nav"
-            className="bg-gray-900 fixed w-full z-50 shadow-md"
-          >
+        <div className="min-h-full ">
+          <Disclosure as="nav" className="bg-gray-900  w-full z-50 shadow-md">
             {({ open }) => (
               <>
                 <div className="mx-auto max-w-8xl px-4 sm:px-6 lg:px-8">
@@ -54,6 +52,9 @@ function NavBar({ children }) {
                       </div>
                       <div className="hidden md:block">
                         <div className="ml-10 flex items-baseline space-x-4">
+                          <h1 className="text-3xl font-bold mt-0 tracking-tight text-gray-200">
+                            TechDukaan
+                          </h1>
                           {navigation.map((item) =>
                             item[userInfo.role] ? (
                               <Link
@@ -81,7 +82,7 @@ function NavBar({ children }) {
                         <Link to="/cart">
                           <button
                             type="button"
-                            className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                            className="rounded-full p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                           >
                             <span className="sr-only">View cart</span>
                             <ShoppingCartIcon
@@ -99,7 +100,7 @@ function NavBar({ children }) {
                         {/* Profile dropdown */}
                         <Menu as="div" className="relative ml-3">
                           <div>
-                            <Menu.Button className="flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                            <Menu.Button className="flex max-w-xs items-center rounded-full text-sm p-1 hover:text-white focus:outline-none focus:ring-2 focus:none focus:ring-offset-2 focus:ring-offset-gray-800">
                               <span className="sr-only">Open user menu</span>
                               {open ? (
                                 <XMarkIcon
@@ -123,7 +124,7 @@ function NavBar({ children }) {
                             leaveFrom="transform opacity-100 scale-100"
                             leaveTo="transform opacity-0 scale-95"
                           >
-                            <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-gray-800 text-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <Menu.Items className="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-gray-800 text-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                               {userNavigation.map((item) => (
                                 <Menu.Item key={item.name}>
                                   {({ active }) => (
@@ -151,7 +152,7 @@ function NavBar({ children }) {
                       <Link to="/cart" className="ml-4">
                         <button
                           type="button"
-                          className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                          className="rounded-full mr-4  p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                         >
                           <span className="sr-only">View cart</span>
                           <ShoppingCartIcon
@@ -161,11 +162,11 @@ function NavBar({ children }) {
                         </button>
                       </Link>
                       {items.length > 0 && (
-                        <span className="inline-flex items-center rounded-md bg-red-600 text-white mb-7 -ml-3 px-2 py-1 text-xs font-medium ring-1 ring-inset ring-red-600">
+                        <span className="inline-flex items-center rounded-md bg-red-600 text-white mb-7 -ml-7 mr-2 px-2 py-1 text-xs font-medium ring-1 ring-inset ring-red-600">
                           {items.length}
                         </span>
                       )}
-                      <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                      <Disclosure.Button className="inline-flex items-center justify-center rounded-md  p-2 text-gray-400  focus:outline-none focus:ring-2  focus:ring-offset-2 focus:ring-offset-gray-800">
                         <span className="sr-only">Open main menu</span>
                         {open ? (
                           <XMarkIcon
@@ -235,13 +236,6 @@ function NavBar({ children }) {
             )}
           </Disclosure>
 
-          <header className="bg-gray-800 shadow">
-            <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-              <h1 className="text-3xl font-bold mt-14 tracking-tight text-indigo-400">
-                TechDukaan
-              </h1>
-            </div>
-          </header>
           <main>
             <div className="mx-auto py-0 sm:px-6 lg:px-0">{children}</div>
           </main>

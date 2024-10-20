@@ -72,7 +72,7 @@ const Banner = ({ productListRef }) => {
   };
 
   return (
-    <div className="relative w-full h-60 sm:h-96 overflow-hidden">
+    <div className="relative w-full h-72 sm:h-[400px] overflow-hidden">
       {/* Banner Images */}
       {banners.map((image, index) => (
         <div
