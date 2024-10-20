@@ -51,7 +51,6 @@ import {
 import { useRecoilState } from "recoil";
 
 const sortOptions = [
-  { name: "Best Rating", sort: "rating", order: "desc", current: false },
   {
     name: "Price: Low to High",
     sort: "discountPrice",
@@ -106,14 +105,14 @@ export default function ProductList() {
 
   const filters = [
     {
-      id: "type",
-      name: "Type",
-      options: types,
-    },
-    {
       id: "subcategory",
       name: "Subcategory",
       options: subcategories,
+    },
+    {
+      id: "type",
+      name: "Type",
+      options: types,
     },
     {
       id: "brand",
