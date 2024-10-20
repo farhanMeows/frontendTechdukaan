@@ -36,6 +36,7 @@ import StripeCheckout from "./pages/StripeCheckout";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import BannerHome from "./pages/BannerHome";
 import AdminBanner from "./features/admin/components/AdminBanner";
+import AdminInvoicePage from "./pages/AdminInvoicePage";
 
 const options = {
   timeout: 5000,
@@ -163,6 +164,15 @@ const router = createBrowserRouter([
       </ProtectedAdmin>
     ),
   },
+  {
+    path: "/invoice/:id",
+    element: (
+      <ProtectedAdmin>
+        <AdminInvoicePage />
+      </ProtectedAdmin>
+    ),
+  },
+
   {
     path: "/stripe-checkout/",
     element: (

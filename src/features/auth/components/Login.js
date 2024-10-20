@@ -29,8 +29,8 @@ export default function Login() {
   return (
     <>
       {user && <Navigate to="/" replace={true}></Navigate>}
-      <div className="flex min-h-full flex-1 flex-col justify-center items-center bg-gray-50 py-12 px-6 lg:px-8">
-        <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
+      <div className="flex min-h-full flex-1 flex-col justify-center items-center bg-gray-900 py-12 px-6 lg:px-8">
+        <div className="bg-gray-800 shadow-2xl rounded-lg p-8 max-w-md w-full">
           <div className="flex justify-center mb-8">
             <img
               className="h-12 w-auto"
@@ -38,10 +38,10 @@ export default function Login() {
               alt="TechDukaan"
             />
           </div>
-          <h2 className="text-center text-3xl font-extrabold text-gray-900">
+          <h2 className="text-center text-3xl font-extrabold text-indigo-400">
             Welcome back to TechDukaan
           </h2>
-          <p className="text-center text-sm text-gray-600 mt-2">
+          <p className="text-center text-sm text-indigo-300 mt-2">
             Log in to your account to access our services
           </p>
 
@@ -57,7 +57,7 @@ export default function Login() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-indigo-300"
               >
                 Email address
               </label>
@@ -72,10 +72,10 @@ export default function Login() {
                     },
                   })}
                   type="email"
-                  className="block w-full rounded-lg border border-gray-300 p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="block w-full rounded-lg border border-gray-700 bg-gray-900 p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-300 sm:text-sm"
                 />
                 {errors.email && (
-                  <p className="mt-2 text-sm text-red-600">
+                  <p className="mt-2 text-sm text-red-500">
                     {errors.email.message}
                   </p>
                 )}
@@ -86,13 +86,13 @@ export default function Login() {
               <div className="flex justify-between">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-indigo-300"
                 >
                   Password
                 </label>
                 <Link
                   to="/forgot-password"
-                  className="text-sm text-indigo-600 hover:text-indigo-500"
+                  className="text-sm text-indigo-400 hover:text-indigo-300"
                 >
                   Forgot password?
                 </Link>
@@ -104,16 +104,16 @@ export default function Login() {
                     required: "Password is required",
                   })}
                   type="password"
-                  className="block w-full rounded-lg border border-gray-300 p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="block w-full rounded-lg border border-gray-700 bg-gray-900 p-2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-300 sm:text-sm"
                 />
                 {errors.password && (
-                  <p className="mt-2 text-sm text-red-600">
+                  <p className="mt-2 text-sm text-red-500">
                     {errors.password.message}
                   </p>
                 )}
               </div>
               {unauthorizedError && (
-                <p className="mt-2 text-sm text-red-600">
+                <p className="mt-2 text-sm text-red-500">
                   Incorrect password. Please try again.
                 </p>
               )}
@@ -129,11 +129,11 @@ export default function Login() {
             </div>
           </form>
 
-          <p className="mt-6 text-center text-sm text-gray-500">
+          <p className="mt-6 text-center text-sm text-indigo-300">
             Not a member?{" "}
             <Link
               to="/signup"
-              className="text-indigo-600 hover:text-indigo-500"
+              className="text-indigo-400 hover:text-indigo-300"
             >
               Create an account
             </Link>
