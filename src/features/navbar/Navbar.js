@@ -1,9 +1,12 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
   ShoppingCartIcon,
   XMarkIcon,
+  UserIcon,
+  ClipboardIcon,
+  ArrowRightOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -35,7 +38,7 @@ function NavBar({ children }) {
     <>
       {userInfo && (
         <div className="min-h-full ">
-          <Disclosure as="nav" className="bg-gray-900  w-full z-50 shadow-md">
+          <Disclosure as="nav" className="bg-gray-900  w-full z-600 shadow-md">
             {({ open }) => (
               <>
                 <div className="mx-auto max-w-8xl px-4 sm:px-6 lg:px-8">
@@ -77,8 +80,9 @@ function NavBar({ children }) {
                     </div>
 
                     {/* Desktop Cart Button */}
-                    <div className="hidden md:block">
+                    <div className="hidden z-60 md:block">
                       <div className="ml-4 flex items-center md:ml-6">
+                        {/* Cart Button */}
                         <Link to="/cart">
                           <button
                             type="button"
@@ -96,53 +100,29 @@ function NavBar({ children }) {
                             {items.length}
                           </span>
                         )}
-
-                        {/* Profile dropdown */}
-                        <Menu as="div" className="relative ml-3">
-                          <div>
-                            <Menu.Button className="flex max-w-xs items-center rounded-full text-sm p-1 hover:text-white focus:outline-none focus:ring-2 focus:none focus:ring-offset-2 focus:ring-offset-gray-800">
-                              <span className="sr-only">Open user menu</span>
-                              {open ? (
-                                <XMarkIcon
-                                  className="block h-6 w-6 text-[#d9d9d9]"
-                                  aria-hidden="true"
-                                />
-                              ) : (
-                                <Bars3Icon
-                                  className="block h-6 w-6 text-[#d9d9d9]"
-                                  aria-hidden="true"
-                                />
-                              )}
-                            </Menu.Button>
-                          </div>
-                          <Transition
-                            as={Fragment}
-                            enter="transition ease-out duration-100"
-                            enterFrom="transform opacity-0 scale-95"
-                            enterTo="transform opacity-100 scale-100"
-                            leave="transition ease-in duration-75"
-                            leaveFrom="transform opacity-100 scale-100"
-                            leaveTo="transform opacity-0 scale-95"
+                        {/* My Orders */}
+                        <Link
+                          to="/my-orders"
+                          className="flex items-center text-gray-400 hover:text-white transition duration-200"
+                        >
+                          <ClipboardIcon
+                            className="h-6 w-6 mr-1 ml-4"
+                            aria-hidden="true"
+                          />
+                        </Link>
+                        {/* User Navigation Items */}
+                        <div className="flex space-x-6 ml-4">
+                          {/* My Profile */}
+                          <Link
+                            to="/profile"
+                            className="flex items-center text-gray-400 hover:text-white transition duration-200"
                           >
-                            <Menu.Items className="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-gray-800 text-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                              {userNavigation.map((item) => (
-                                <Menu.Item key={item.name}>
-                                  {({ active }) => (
-                                    <Link
-                                      to={item.link}
-                                      className={classNames(
-                                        active ? "bg-gray-700" : "",
-                                        "block px-4 py-2 text-sm text-gray-200 hover:text-white"
-                                      )}
-                                    >
-                                      {item.name}
-                                    </Link>
-                                  )}
-                                </Menu.Item>
-                              ))}
-                            </Menu.Items>
-                          </Transition>
-                        </Menu>
+                            <UserIcon
+                              className="h-6 w-6 mr-1"
+                              aria-hidden="true"
+                            />
+                          </Link>
+                        </div>
                       </div>
                     </div>
 

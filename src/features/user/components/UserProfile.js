@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectUserInfo, updateUserAsync } from "../userSlice";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
 
 export default function UserProfile() {
   const dispatch = useDispatch();
@@ -78,15 +80,29 @@ export default function UserProfile() {
         </div>
 
         <div className="border-t border-gray-700 px-4 py-6">
-          <button
-            onClick={() => {
-              setShowAddAddressForm(true);
-              setSelectedEditIndex(-1);
-            }}
-            className="rounded-md bg-green-700 px-4 py-2 text-sm font-semibold text-white shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition"
-          >
-            Add New Address
-          </button>
+          <div className="flex justify-between">
+            <button
+              onClick={() => {
+                setShowAddAddressForm(true);
+                setSelectedEditIndex(-1);
+              }}
+              className="rounded-md bg-green-700 px-4 py-2 text-sm font-semibold text-white shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition"
+            >
+              Add New Address
+            </button>
+            <button>
+              <Link
+                to="/logout"
+                className="flex items-center text-gray-400 hover:text-red-600 transition duration-200"
+              >
+                <ArrowRightOnRectangleIcon
+                  className="h-6 w-6 mr-1"
+                  aria-hidden="true"
+                />
+                <span className="text-sm">Sign out</span>
+              </Link>
+            </button>
+          </div>
 
           {showAddAddressForm ? (
             <form
