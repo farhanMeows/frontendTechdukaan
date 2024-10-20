@@ -106,6 +106,11 @@ export default function ProductList() {
 
   const filters = [
     {
+      id: "type",
+      name: "type",
+      options: types,
+    },
+    {
       id: "subcategory",
       name: "Subcategory",
       options: subcategories,
@@ -149,11 +154,6 @@ export default function ProductList() {
       id: "storage",
       name: "storage",
       options: storages,
-    },
-    {
-      id: "type",
-      name: "type",
-      options: types,
     },
   ];
   const handleFilter = (e, section, option) => {
@@ -452,7 +452,7 @@ export default function ProductList() {
   }, []);
 
   return (
-    <div className="bg-white">
+    <div className="bg-gray-900">
       <div>
         <MobileFilter
           handleFilter={handleFilter}
@@ -461,21 +461,21 @@ export default function ProductList() {
           filters={filters}
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
-        ></MobileFilter>
+        />
 
         <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-24">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900">
+          <div className="flex items-baseline justify-between border-b border-gray-700 pb-6 pt-10">
+            <h1 className="text-4xl font-bold tracking-tight text-indigo-400">
               All Products
             </h1>
 
             <div className="flex items-center">
               <Menu as="div" className="relative inline-block text-left">
                 <div>
-                  <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                  <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-400 hover:text-indigo-400">
                     Sort
                     <ChevronDownIcon
-                      className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                      className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-500 group-hover:text-indigo-400"
                       aria-hidden="true"
                     />
                   </Menu.Button>
@@ -490,7 +490,7 @@ export default function ProductList() {
                   leaveFrom="transform opacity-100 scale-100"
                   leaveTo="transform opacity-0 scale-95"
                 >
-                  <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-gray-800 shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <div className="py-1">
                       {sortOptions.map((option) => (
                         <Menu.Item key={option.name}>
@@ -499,10 +499,10 @@ export default function ProductList() {
                               onClick={(e) => handleSort(e, option)}
                               className={classNames(
                                 option.current
-                                  ? "font-medium text-gray-900"
-                                  : "text-gray-500",
-                                active ? "bg-gray-100" : "",
-                                "block px-4 py-2 text-sm"
+                                  ? "font-medium text-indigo-400"
+                                  : "text-gray-300",
+                                active ? "bg-gray-700" : "",
+                                "block px-4 py-2 text-sm transition"
                               )}
                             >
                               {option.name}
@@ -515,21 +515,16 @@ export default function ProductList() {
                 </Transition>
               </Menu>
 
-              <button
-                type="button"
-                className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7"
-              >
-                <span className="sr-only">View grid</span>
-                <Squares2X2Icon className="h-5 w-5" aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
-                onClick={() => setMobileFiltersOpen(true)}
-              >
-                <span className="sr-only">Filters</span>
-                <FunnelIcon className="h-5 w-5" aria-hidden="true" />
-              </button>
+              {isCategorySelected && (
+                <button
+                  type="button"
+                  className="-m-2 ml-4 p-2 text-gray-400 hover:text-indigo-400 sm:ml-6 lg:hidden"
+                  onClick={() => setMobileFiltersOpen(true)}
+                >
+                  <span className="sr-only">Filters</span>
+                  <FunnelIcon className="h-5 w-5" aria-hidden="true" />
+                </button>
+              )}
             </div>
           </div>
 
@@ -545,14 +540,14 @@ export default function ProductList() {
                 selectedCategory={selectedCategory}
                 setSelectedCategory={setSelectedCategory}
                 filter={filter}
-              ></DesktopFilter>
+              />
               {/* Product grid */}
               <div className="lg:col-span-3">
                 <ProductGrid
                   products={products}
                   status={status}
                   isCustomBuilt={isCustomBuilt}
-                ></ProductGrid>
+                />
               </div>
               {/* Product grid end */}
             </div>
@@ -564,7 +559,7 @@ export default function ProductList() {
             setPage={setPage}
             handlePage={handlePage}
             totalItems={totalItems}
-          ></Pagination>
+          />
         </main>
       </div>
     </div>
@@ -596,7 +591,7 @@ function MobileFilter({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black bg-opacity-25" />
+          <div className="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity" />
         </Transition.Child>
 
         <div className="fixed inset-0 z-40 flex">
@@ -609,12 +604,12 @@ function MobileFilter({
             leaveFrom="translate-x-0"
             leaveTo="translate-x-full"
           >
-            <Dialog.Panel className="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-white py-4 pb-12 shadow-xl">
+            <Dialog.Panel className="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-gray-900 py-4 pb-12 shadow-xl">
               <div className="flex items-center justify-between px-4">
-                <h2 className="text-lg font-medium text-gray-900">Filters</h2>
+                <h2 className="text-lg font-medium text-indigo-400">Filters</h2>
                 <button
                   type="button"
-                  className="-mr-2 flex h-10 w-10 items-center justify-center rounded-md bg-white p-2 text-gray-400"
+                  className="flex h-10 w-10 items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700"
                   onClick={() => setMobileFiltersOpen(false)}
                 >
                   <span className="sr-only">Close menu</span>
@@ -623,79 +618,69 @@ function MobileFilter({
               </div>
 
               {/* Filters */}
-              <form className="mt-4 border-t border-gray-200">
+              <form className="mt-4 border-t border-gray-700">
                 {filters
                   .filter(
                     (section) => section.options && section.options.length > 0
-                  ) // Filter out sections with no options
+                  )
                   .map((section) => (
                     <Disclosure
                       as="div"
                       key={section.id}
-                      defaultOpen={true}
-                      className="border-t border-gray-200 px-4 py-6"
+                      defaultOpen={
+                        section.id === "subcategory" ||
+                        section.id === "type" ||
+                        section.id === "brand"
+                      }
+                      className="border-t border-gray-700 px-4 py-6"
                     >
                       {({ open }) => (
                         <>
                           <h3 className="-mx-2 -my-3 flow-root">
-                            <Disclosure.Button className="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500">
-                              <span className="font-medium text-gray-900">
+                            <Disclosure.Button className="flex w-full items-center justify-between bg-gray-800 px-2 py-3 rounded-lg text-indigo-400 hover:bg-gray-700 transition">
+                              <span className="font-medium">
                                 {section.name}
                               </span>
                               <span className="ml-6 flex items-center">
                                 {open ? (
                                   <MinusIcon
-                                    className="h-5 w-5"
+                                    className="h-5 w-5 text-gray-400"
                                     aria-hidden="true"
                                   />
                                 ) : (
                                   <PlusIcon
-                                    className="h-5 w-5"
+                                    className="h-5 w-5 text-gray-400"
                                     aria-hidden="true"
                                   />
                                 )}
                               </span>
                             </Disclosure.Button>
                           </h3>
-                          <Disclosure.Panel className="pt-6">
-                            <div className="space-y-6">
+                          <Disclosure.Panel className="pt-4">
+                            <div className="space-y-4">
                               {section.options.map((option, optionIdx) => (
                                 <div
                                   key={option.value}
                                   className="flex items-center"
                                 >
-                                  {section.id === "category" ? (
-                                    // Use checked for category options
-                                    <input
-                                      id={`filter-mobile-${section.id}-${optionIdx}`}
-                                      name={`${section.id}[]`}
-                                      value={option.value}
-                                      type="checkbox"
-                                      checked={
-                                        selectedCategory === option.value
-                                      }
-                                      onChange={(e) =>
-                                        handleFilter(e, section, option)
-                                      }
-                                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                    />
-                                  ) : (
-                                    // Use defaultChecked for other options
-                                    <input
-                                      id={`filter-mobile-${section.id}-${optionIdx}`}
-                                      name={`${section.id}[]`}
-                                      value={option.value}
-                                      type="checkbox"
-                                      defaultChecked={option.checked}
-                                      onChange={(e) =>
-                                        handleFilter(e, section, option)
-                                      }
-                                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                    />
-                                  )}
+                                  <input
+                                    id={`filter-mobile-${section.id}-${optionIdx}`}
+                                    name={`${section.id}[]`}
+                                    value={option.value}
+                                    type="checkbox"
+                                    checked={
+                                      section.id === "category"
+                                        ? selectedCategory === option.value
+                                        : option.checked
+                                    }
+                                    onChange={(e) =>
+                                      handleFilter(e, section, option)
+                                    }
+                                    className="h-4 w-4 rounded border-gray-600 text-indigo-500 focus:ring-indigo-500"
+                                  />
                                   <label
                                     htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
-                                    className="ml-3 min-w-0 flex-1 text-gray-500"
+                                    className="ml-3 text-sm text-gray-300"
                                   >
                                     {option.label}
                                   </label>
@@ -725,65 +710,62 @@ function DesktopFilter({
   filter,
 }) {
   return (
-    <form className="hidden lg:block">
+    <form className="hidden lg:block bg-gray-900 p-6 rounded-lg shadow-lg">
       {filters
-        .filter((section) => section.options && section.options.length > 0) // Filter out sections with no options
+        .filter((section) => section.options && section.options.length > 0)
         .map((section) => (
           <Disclosure
             as="div"
             key={section.id}
-            defaultOpen={true}
-            className="border-b border-gray-200 py-6"
+            defaultOpen={
+              section.id === "subcategoy" ||
+              section.id === "type" ||
+              section.id === "brand"
+            }
+            className="border-b border-gray-700 py-4"
           >
             {({ open }) => (
               <>
                 <h3 className="-my-3 flow-root">
-                  <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
-                    <span className="font-medium text-gray-900">
+                  <Disclosure.Button className="flex w-full items-center justify-between bg-gray-800 py-3 px-4 rounded-lg text-sm text-gray-300 hover:bg-gray-700 transition">
+                    <span className="font-medium text-indigo-400">
                       {section.name}
                     </span>
                     <span className="ml-6 flex items-center">
                       {open ? (
-                        <MinusIcon className="h-5 w-5" aria-hidden="true" />
+                        <MinusIcon
+                          className="h-5 w-5 text-gray-400"
+                          aria-hidden="true"
+                        />
                       ) : (
-                        <PlusIcon className="h-5 w-5" aria-hidden="true" />
+                        <PlusIcon
+                          className="h-5 w-5 text-gray-400"
+                          aria-hidden="true"
+                        />
                       )}
                     </span>
                   </Disclosure.Button>
                 </h3>
-                <Disclosure.Panel className="pt-6">
+                <Disclosure.Panel className="pt-4">
                   <div className="space-y-4">
                     {section.options.map((option, optionIdx) => (
                       <div key={option.value} className="flex items-center">
-                        {section.id === "category" ? (
-                          // Use checked for category options
-                          <input
-                            id={`filter-${section.id}-${optionIdx}`}
-                            name={`${section.id}[]`}
-                            value={option.value}
-                            type="checkbox"
-                            checked={selectedCategory === option.value}
-                            onChange={(e) => {
-                              // Check the checkbox (select)
-                              handleFilter(e, section, option);
-                            }}
-                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                          />
-                        ) : (
-                          // Use defaultChecked for other options
-                          <input
-                            id={`filter-${section.id}-${optionIdx}`}
-                            name={`${section.id}[]`}
-                            value={option.value}
-                            type="checkbox"
-                            defaultChecked={option.checked}
-                            onChange={(e) => handleFilter(e, section, option)}
-                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                          />
-                        )}
+                        <input
+                          id={`filter-${section.id}-${optionIdx}`}
+                          name={`${section.id}[]`}
+                          value={option.value}
+                          type="checkbox"
+                          checked={
+                            section.id === "category"
+                              ? selectedCategory === option.value
+                              : option.checked
+                          }
+                          onChange={(e) => handleFilter(e, section, option)}
+                          className="h-4 w-4 rounded border-gray-600 text-indigo-500 focus:ring-indigo-500"
+                        />
                         <label
                           htmlFor={`filter-${section.id}-${optionIdx}`}
-                          className="ml-3 text-sm text-gray-600"
+                          className="ml-3 text-sm text-gray-400"
                         >
                           {option.label}
                         </label>
@@ -801,15 +783,15 @@ function DesktopFilter({
 
 function ProductGrid({ products, status, isCustomBuilt }) {
   return (
-    <div className="bg-white">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+    <div className="bg-gray-900 min-h-screen text-gray-100">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         {isCustomBuilt ? (
           // WebView or iframe for 'Custom Built' option
           <div className="w-full h-full flex justify-center items-center">
             <iframe
               src="https://forms.gle/uwFXfiKHNd53Zojv5"
               title="Custom Built Products"
-              className="w-full h-screen border-none"
+              className="w-full h-screen border-none rounded-lg shadow-xl"
             />
           </div>
         ) : (
@@ -818,7 +800,7 @@ function ProductGrid({ products, status, isCustomBuilt }) {
               <Grid
                 height="80"
                 width="80"
-                color="rgb(79, 70, 229) "
+                color="rgb(168, 85, 247)" // Futuristic accent color
                 ariaLabel="grid-loading"
                 radius="12.5"
                 wrapperStyle={{}}
@@ -829,24 +811,20 @@ function ProductGrid({ products, status, isCustomBuilt }) {
 
             {products.map((product) => (
               <Link to={`/product-detail/${product.id}`} key={product.id}>
-                <div className="group relative border-solid border p-4 rounded-lg shadow-lg transition hover:shadow-3xl transform hover:scale-110">
-                  <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-white group-hover:opacity-90">
+                <div className="group relative p-4 rounded-lg bg-gray-800 hover:bg-gray-700 shadow-lg hover:shadow-2xl transform transition-transform hover:scale-105">
+                  <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-gray-900">
                     <img
                       src={product.thumbnail}
                       alt={product.title}
-                      className="h-full w-full object-contain object-center"
+                      className="h-full w-full object-contain object-center group-hover:opacity-90"
                     />
                   </div>
-                  <div className="mt-4 flex flex-col">
-                    <h3 className="text-lg font-medium text-gray-900 truncate">
+                  <div className="mt-4">
+                    <h3 className="text-lg font-medium text-indigo-400 truncate">
                       {product.title}
                     </h3>
-                    <p className="mt-1 flex items-center text-yellow-500">
-                      {/* <StarIcon className="w-5 h-5" /> */}
-                      {/* <span className="ml-1 text-sm">{product.rating}</span> */}
-                    </p>
                     <div className="mt-2 flex justify-between items-center">
-                      <p className="text-sm font-semibold text-gray-900">
+                      <p className="text-sm font-semibold text-indigo-100">
                         ₹{product.discountPrice}
                       </p>
                       <p className="text-xs line-through text-gray-500">

@@ -7,7 +7,7 @@ import {
   selectError,
 } from "../../product/components/bannerSlice"; // Update the import path if needed
 
-const Banner = () => {
+const Banner = ({ productListRef }) => {
   const dispatch = useDispatch();
   const banner = useSelector((state) => state.banner.banners); // Now this is a single banner object
   const loading = useSelector(selectLoading);
@@ -106,6 +106,7 @@ const Banner = () => {
       </button>
 
       {/* Navigation Dots */}
+
       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
         {banners.map((_, index) => (
           <button

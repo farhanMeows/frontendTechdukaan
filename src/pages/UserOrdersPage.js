@@ -3,10 +3,9 @@ import UserOrders from "../features/user/components/UserOrders";
 
 function UserOrdersPage() {
   return (
-    <div>
+    <div className="bg-gray-900 min-h-screen text-gray-100">
       <NavBar>
-        <h1 className="mx-auto ml-4 text-3xl">My Orders</h1>
-        <UserOrders></UserOrders>
+        <UserOrders />
       </NavBar>
     </div>
   );

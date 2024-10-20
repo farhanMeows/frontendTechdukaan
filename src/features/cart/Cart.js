@@ -36,35 +36,31 @@ export default function Cart() {
 
   return (
     <>
-      {!items.length && cartLoaded && (
-        <Navigate to="/" replace={true}></Navigate>
-      )}
+      {!items.length && cartLoaded && <Navigate to="/" replace={true} />}
 
-      <div>
-        <div className="mx-auto mt-12 bg-white max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
-            <h1 className="text-4xl my-5 font-bold tracking-tight text-gray-900">
-              Cart
+      <div className="bg-gray-900 my-4 min-h-screen">
+        <div className="mx-auto mt-0 max-w-3xl bg-gray-800 px-4 sm:px-6 lg:px-20 lg:py-5 shadow-lg">
+          <div className=" px-4 py-6 sm:px-6">
+            <h1 className="text-2xl border-b pb-2 border-gray-700  mb-10 font-bold tracking-tight text-indigo-400 text-center">
+              My Cart
             </h1>
             <div className="flow-root">
-              {status === "loading" ? (
-                <div className="fixed inset-0 flex items-center justify-center">
+              {status === "loading" && (
+                <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
                   <Grid
                     height="80"
                     width="80"
                     color="rgb(79, 70, 229)"
                     ariaLabel="grid-loading"
                     radius="12.5"
-                    wrapperStyle={{}}
-                    wrapperClass=""
                     visible={true}
                   />
                 </div>
-              ) : null}
-              <ul className="-my-6 divide-y divide-gray-200">
+              )}
+              <ul className="-my-6 divide-y divide-gray-700">
                 {items.map((item) => (
-                  <li key={item.id} className="flex py-6">
-                    <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                  <li key={item.id} className="flex flex-col sm:flex-row py-6">
+                    <div className="w-full sm:w-1/2 h-1/2 flex-shrink-0 overflow-hidden rounded-md border border-gray-700 mb-4 sm:mb-0">
                       <img
                         src={item.product.thumbnail}
                         alt={item.product.title}
@@ -74,27 +70,35 @@ export default function Cart() {
 
                     <div className="ml-4 flex flex-1 flex-col">
                       <div>
-                        <div className="flex justify-between text-base font-medium text-gray-900">
+                        <div className="flex justify-between text-base font-medium text-gray-200">
                           <h3>
-                            <a href={item.product.id}>{item.product.title}</a>
+                            <Link
+                              to={`/product-detail/${item.product.id}`}
+                              className="hover:text-indigo-400 transition duration-200"
+                            >
+                              {item.product.title}
+                            </Link>
                           </h3>
-                          <p className="ml-4">₹{item.product.discountPrice}</p>
+                          <p className="ml-4 text-gray-200">
+                            ₹{item.product.discountPrice}
+                          </p>
                         </div>
-                        <p className="mt-1 text-sm text-gray-500">
+                        <p className="mt-1 text-sm text-gray-400">
                           {item.product.brand}
                         </p>
                       </div>
                       <div className="flex flex-1 items-end justify-between text-sm">
-                        <div className="text-gray-500">
+                        <div className="text-gray-400">
                           <label
                             htmlFor="quantity"
-                            className="inline mr-5 text-sm font-medium leading-6 text-gray-900"
+                            className="inline mr-5 text-sm font-medium leading-6 text-gray-200"
                           >
                             Qty
                           </label>
                           <select
                             onChange={(e) => handleQuantity(e, item)}
                             value={item.quantity}
+                            className="rounded border border-gray-700 bg-gray-800 text-gray-200 focus:border-indigo-600 focus:outline-none"
                           >
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -107,19 +111,19 @@ export default function Cart() {
                         <div className="flex">
                           <Modal
                             title={`Delete ${item.product.title}`}
-                            message="Are you sure you want to delete this Cart item ?"
+                            message="Are you sure you want to delete this Cart item?"
                             dangerOption="Delete"
                             cancelOption="Cancel"
                             dangerAction={(e) => handleRemove(e, item.id)}
                             cancelAction={() => setOpenModal(null)}
                             showModal={openModal === item.id}
-                          ></Modal>
+                          />
                           <button
                             onClick={(e) => {
                               setOpenModal(item.id);
                             }}
                             type="button"
-                            className="font-medium text-indigo-600 hover:text-indigo-500"
+                            className="font-medium text-indigo-400 hover:text-indigo-300 transition duration-200"
                           >
                             Remove
                           </button>
@@ -132,12 +136,12 @@ export default function Cart() {
             </div>
           </div>
 
-          <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
-            <div className="flex justify-between my-2 text-base font-medium text-gray-900">
+          <div className="border-t border-gray-700 px-4 py-6 sm:px-6">
+            <div className="flex justify-between my-2 text-xl font-medium text-gray-200">
               <p>Subtotal</p>
               <p>₹ {totalAmount}</p>
             </div>
-            <div className="flex justify-between my-2 text-base font-medium text-gray-900">
+            <div className="flex justify-between my-2 text-base font-medium text-gray-200">
               <p>Total Items in Cart</p>
               <p>{totalItems} items</p>
             </div>
@@ -147,18 +151,18 @@ export default function Cart() {
             <div className="mt-6">
               <Link
                 to="/checkout"
-                className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+                className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 transition duration-200"
               >
                 Checkout
               </Link>
             </div>
             <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
               <p>
-                or
+                or{" "}
                 <Link to="/">
                   <button
                     type="button"
-                    className="font-medium text-indigo-600 hover:text-indigo-500"
+                    className="font-medium text-indigo-400 hover:text-indigo-300 transition duration-200"
                   >
                     Continue Shopping
                     <span aria-hidden="true"> &rarr;</span>

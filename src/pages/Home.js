@@ -84,7 +84,16 @@ function Home() {
       setIsCustomBuilt(false);
       // Scroll to the ProductList section
       if (productListRef.current) {
-        productListRef.current.scrollIntoView({ behavior: "smooth" });
+        const offset = -100; // Adjust this value as needed to scroll above the ref
+        const topPosition =
+          productListRef.current.getBoundingClientRect().top +
+          window.scrollY +
+          offset;
+
+        window.scrollTo({
+          top: topPosition,
+          behavior: "smooth",
+        });
       }
     }
 
@@ -92,7 +101,7 @@ function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen bg-gray-900 flex flex-col">
       <NavBar>
         <CategoriesBar
           categories={categories}
@@ -100,7 +109,7 @@ function Home() {
           categoryId={selectedCategoryId}
           handleFilter={handleCategoryFilter}
         />
-        <Banner />
+        <Banner productListRef={productListRef} />
         <div ref={productListRef} className="flex-grow">
           <ProductList selectedCategory={selectedCategory} />
         </div>
