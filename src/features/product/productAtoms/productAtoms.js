@@ -26,3 +26,7 @@ export const isCustomBuiltAtom = atom({
   key: "isCustomBuiltAtom", // unique ID (with respect to other atoms/selectors)
   default: false, // default value (initially no category is selected)
 });
+export const isCustomBuiltLoadinAtom = atom({
+  key: "isCustomBuiltLoadinAtom", // unique ID (with respect to other atoms/selectors)
+  default: false, // default value (initially no category is selected)
+});

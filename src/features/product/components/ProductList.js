@@ -47,6 +47,7 @@ import {
   isCategorySelectedAtom,
   filterAtom,
   isCustomBuiltAtom,
+  isCustomBuiltLoadinAtom,
 } from "../productAtoms/productAtoms";
 import { useRecoilState } from "recoil";
 
@@ -101,6 +102,9 @@ export default function ProductList() {
     useRecoilState(selectedCategoryAtom);
   const [selectedCategoryId, setSelectedCategoryId] = useRecoilState(
     selectedCategoryIdAtom
+  );
+  const [isCustomBuiltLoadin, setIsCustomBuiltLoadin] = useRecoilState(
+    isCustomBuiltLoadinAtom
   );
 
   const filters = [

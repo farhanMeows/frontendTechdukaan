@@ -42,14 +42,7 @@ function Home() {
   const handleCategoryFilter = (e, section, option) => {
     const newFilter = { ...filter };
 
-    if (selectedCategory === option.value) {
-      // Deselect the category
-      setSelectedCategory("");
-      setSelectedCategoryId(null);
-      setIsCategorySelected(false);
-      newFilter["category"] = []; // Clear category filter
-
-      // Reset related filters
+    const resetFilters = () => {
       newFilter["subcategory"] = [];
       newFilter["brand"] = [];
       newFilter["ram"] = [];
@@ -61,67 +54,69 @@ function Home() {
       newFilter["size"] = [];
       newFilter["storage"] = [];
       newFilter["type"] = [];
+    };
+
+    // Check if the selected category is being deselected
+    if (selectedCategory === option.value) {
+      // Deselect the category
+      setSelectedCategory("");
+      setSelectedCategoryId(null);
+      setIsCategorySelected(false);
+      newFilter["category"] = []; // Clear category filter
+      resetFilters();
       setIsCustomBuilt(false);
     } else {
-      if (option.value === "Custom Build") {
+      // Handle "Custom Build" separately
+      if (option.value === "Custom Build PC") {
         if (isCustomBuilt) {
           // Deselect "Custom Built"
           setIsCustomBuilt(false);
           console.log("Deselected Custom Built");
         } else {
           // Select "Custom Built"
-          setSelectedCategory("");
-          setSelectedCategoryId(null);
-          setIsCategorySelected(false);
-          newFilter["category"] = [];
-          newFilter["subcategory"] = [];
-          newFilter["brand"] = [];
-          newFilter["ram"] = [];
-          newFilter["processor"] = [];
-          newFilter["specification"] = [];
-          newFilter["colour"] = [];
-          newFilter["graphic"] = [];
-          newFilter["inkandcartridges"] = [];
-          newFilter["size"] = [];
-          newFilter["storage"] = [];
-          newFilter["type"] = [];
+          // setSelectedCategory("");
+          // setSelectedCategoryId(null);
+          // // setIsCategorySelected(false);
+          // newFilter["category"] = []; // Clear category filter
+          setSelectedCategory(option.value);
+          setSelectedCategoryId(option.id);
+          setIsCategorySelected(true);
+          newFilter["category"] = [option.value];
+          resetFilters();
           setIsCustomBuilt(true);
           console.log("Selected Custom Built");
+
+          // You can retain existing selections or clear them based on your logic
+          // resetFilters();
+          // Clear category without deselecting it
+          newFilter["category"] = [];
         }
       } else {
-        setIsCustomBuilt(false);
         // Select a new category
+        console.log(option.value);
+
         setSelectedCategory(option.value);
         setSelectedCategoryId(option.id);
         setIsCategorySelected(true);
         newFilter["category"] = [option.value];
 
-        // Clear other related filters when category changes
-        newFilter["subcategory"] = [];
-        newFilter["brand"] = [];
-        newFilter["ram"] = [];
-        newFilter["processor"] = [];
-        newFilter["specification"] = [];
-        newFilter["colour"] = [];
-        newFilter["graphic"] = [];
-        newFilter["inkandcartridges"] = [];
-        newFilter["size"] = [];
-        newFilter["storage"] = [];
-        newFilter["type"] = [];
+        // Clear related filters when a new category is selected
+        resetFilters();
         setIsCustomBuilt(false);
-        // Scroll to the ProductList section
-        if (productListRef.current) {
-          const offset = -40; // Adjust this value as needed to scroll above the ref
-          const topPosition =
-            productListRef.current.getBoundingClientRect().top +
-            window.scrollY +
-            offset;
+      }
 
-          window.scrollTo({
-            top: topPosition,
-            behavior: "smooth",
-          });
-        }
+      // Scroll to the ProductList section
+      if (productListRef.current) {
+        const offset = -40; // Adjust this value as needed to scroll above the ref
+        const topPosition =
+          productListRef.current.getBoundingClientRect().top +
+          window.scrollY +
+          offset;
+
+        window.scrollTo({
+          top: topPosition,
+          behavior: "smooth",
+        });
       }
     }
 
