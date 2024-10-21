@@ -21,6 +21,7 @@ import {
   selectCategories,
   selectProductListStatus,
   selectTotalItems,
+  searchProductAsync,
 } from "../productSlice";
 import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
@@ -50,6 +51,7 @@ import {
   isCustomBuiltLoadinAtom,
 } from "../productAtoms/productAtoms";
 import { useRecoilState } from "recoil";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline"; // Importing the search icon
 
 const sortOptions = [
   {
@@ -77,7 +79,9 @@ export default function ProductList() {
   const categories = useSelector(selectCategories);
   const totalItems = useSelector(selectTotalItems);
   const status = useSelector(selectProductListStatus);
-
+  const [query, setQuery] = useState("");
+  const [lastClickedFilterId, setLastClickedFilterId] = useState("");
+  const [lastClickedFilterValue, setLastClickedFilterValue] = useState("");
   const [filter, setFilter] = useRecoilState(filterAtom);
   const [sort, setSort] = useState({});
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -159,10 +163,20 @@ export default function ProductList() {
       options: storages,
     },
   ];
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (query) {
+      dispatch(searchProductAsync(query));
+    }
+  };
+  console.log(products);
+
   const handleFilter = (e, section, option) => {
     // Create a new filter object immutably
     const newFilter = { ...filter };
-
+    setLastClickedFilterId(section.id);
+    setLastClickedFilterValue(section.id);
     // Handle subcategory filter
     if (section.id === "subcategory") {
       console.log(option.value);
@@ -447,12 +461,25 @@ export default function ProductList() {
   }, [dispatch, filter, sort, page]);
 
   useEffect(() => {
-    setPage(1);
-  }, [totalItems, sort]);
+    const delayDebounceFn = setTimeout(() => {
+      if (query !== "") {
+        // Dispatch the search action when there is a query
+        dispatch(searchProductAsync(query));
+      } else {
+        // If the query is empty, dispatch the fetch action for filtered products
+        dispatch(fetchProductsByFiltersAsync({ filter, sort, totalItems }));
+      }
+      setPage(1); // Reset the page when a new search or filter is triggered
+    }, 300); // 300ms debounce delay
 
+    // Cleanup function to clear the timeout if query changes before delay ends
+    return () => clearTimeout(delayDebounceFn);
+  }, [query, dispatch, filter, sort, totalItems]); // Include filter, sort, and totalItems in dependencies
+
+  // Fetch categories only on initial mount
   useEffect(() => {
     dispatch(fetchCategoriesAsync());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="bg-gray-900">
@@ -467,13 +494,33 @@ export default function ProductList() {
         />
 
         <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-baseline justify-between border-b border-gray-700 pb-6 pt-10">
-            <h1 className="text-4xl font-bold tracking-tight text-indigo-400">
+          <div className="flex flex-col sm:flex-row items-baseline justify-between border-b border-gray-700 pb-6 pt-10">
+            <h1 className="  text-4xl font-bold tracking-tight text-indigo-400">
               All Products
             </h1>
 
-            <div className="flex items-center">
-              <Menu as="div" className="relative z-10 inline-block text-left">
+            <div className="flex flex-row items-center justify-between sm:justify-end w-full sm:w-auto space-x-4 mt-4 sm:mt-0">
+              {/* Search Bar */}
+              <div className="w-full max-w-md sm:max-w-lg lg:w-96 mx-auto">
+                <form className="flex items-center bg-gray-900 rounded-lg py-2">
+                  <div className="flex items-center w-full">
+                    {/* <MagnifyingGlassIcon
+                      className="h-6 w-6 text-gray-400 mr-3"
+                      aria-hidden="true"
+                    /> */}
+                    <input
+                      type="text"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      placeholder="Search for a product, category, or brand"
+                      className="w-full bg-transparent text-sm sm:text-base text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 rounded-lg px-2 py-1"
+                    />
+                  </div>
+                </form>
+              </div>
+
+              {/* Sort Icon */}
+              <Menu as="div" className="relative z-10">
                 <div>
                   <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-400 hover:text-indigo-400">
                     Sort
@@ -518,10 +565,11 @@ export default function ProductList() {
                 </Transition>
               </Menu>
 
+              {/* Mobile Filter Icon */}
               {isCategorySelected && (
                 <button
                   type="button"
-                  className="-m-2 ml-4 p-2 text-gray-400 hover:text-indigo-400 sm:ml-6 lg:hidden"
+                  className="-m-2 p-2 text-gray-400 hover:text-indigo-400 lg:hidden"
                   onClick={() => setMobileFiltersOpen(true)}
                 >
                   <span className="sr-only">Filters</span>
@@ -531,11 +579,11 @@ export default function ProductList() {
             </div>
           </div>
 
+          {/* Product grid */}
           <section aria-labelledby="products-heading" className="pb-24 pt-6">
             <h2 id="products-heading" className="sr-only">
               Products
             </h2>
-
             <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
               <DesktopFilter
                 handleFilter={handleFilter}
@@ -544,19 +592,19 @@ export default function ProductList() {
                 setSelectedCategory={setSelectedCategory}
                 filter={filter}
               />
-              {/* Product grid */}
               <div className="lg:col-span-3">
                 <ProductGrid
                   products={products}
                   status={status}
                   isCustomBuilt={isCustomBuilt}
+                  query={query}
+                  setQuery={setQuery}
+                  handleSearch={handleSearch}
                 />
               </div>
-              {/* Product grid end */}
             </div>
           </section>
 
-          {/* section of product and filters ends */}
           <Pagination
             page={page}
             setPage={setPage}
@@ -782,12 +830,18 @@ function DesktopFilter({
   );
 }
 
-function ProductGrid({ products, status, isCustomBuilt }) {
+function ProductGrid({
+  products,
+  status,
+  isCustomBuilt,
+  handleSearch,
+  setQuery,
+  query,
+}) {
   return (
     <div className="bg-gray-900 min-h-screen text-gray-100">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         {isCustomBuilt ? (
-          // WebView or iframe for 'Custom Built' option
           <div className="w-full h-full flex justify-center items-center">
             <iframe
               src="https://forms.gle/uwFXfiKHNd53Zojv5"
@@ -796,50 +850,55 @@ function ProductGrid({ products, status, isCustomBuilt }) {
             />
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
-            {status === "loading" ? (
-              <Grid
-                height="80"
-                width="80"
-                color="rgb(168, 85, 247)" // Futuristic accent color
-                ariaLabel="grid-loading"
-                radius="12.5"
-                wrapperStyle={{}}
-                wrapperClass=""
-                visible={true}
-              />
-            ) : null}
+          <>
+            {/* Responsive Search Bar */}
 
-            {products.map((product) => (
-              <Link to={`/product-detail/${product.id}`} key={product.id}>
-                <div className="group relative p-4 rounded-lg bg-gray-800 hover:bg-gray-700 shadow-lg hover:shadow-2xl transform transition-transform hover:scale-105">
-                  <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-gray-900">
-                    <img
-                      src={product.thumbnail}
-                      alt={product.title}
-                      className="h-full w-full object-contain object-center group-hover:opacity-90"
-                    />
-                  </div>
-                  <div className="mt-4">
-                    <h3 className="text-lg font-medium text-indigo-400 truncate">
-                      {product.title}
-                    </h3>
-                    <div className="mt-2 flex justify-between items-center">
-                      <p className="text-sm font-semibold text-indigo-100">
-                        ₹{product.discountPrice}
-                      </p>
-                      <p className="text-xs line-through text-gray-500">
-                        ₹{product.price}
-                      </p>
+            <div className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
+              {status === "loading" ? (
+                <Grid
+                  height="80"
+                  width="80"
+                  color="rgb(168, 85, 247)" // Futuristic accent color
+                  ariaLabel="grid-loading"
+                  radius="12.5"
+                  wrapperStyle={{}}
+                  wrapperClass=""
+                  visible={true}
+                />
+              ) : null}
+              {products.map((product) => (
+                <Link to={`/product-detail/${product.id}`} key={product.id}>
+                  <div className="group relative p-4 rounded-lg bg-gray-800 hover:bg-gray-700 shadow-lg hover:shadow-2xl transform transition-transform hover:scale-105">
+                    <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-gray-900">
+                      <img
+                        src={product.thumbnail}
+                        alt={product.title}
+                        className="h-full w-full object-contain object-center group-hover:opacity-90"
+                      />
                     </div>
-                    {product.stock <= 0 && (
-                      <p className="mt-2 text-sm text-red-500">Out of stock</p>
-                    )}
+                    <div className="mt-4">
+                      <h3 className="text-lg font-medium text-indigo-400 truncate">
+                        {product.title}
+                      </h3>
+                      <div className="mt-2 flex justify-between items-center">
+                        <p className="text-sm font-semibold text-indigo-100">
+                          ₹{product.discountPrice}
+                        </p>
+                        <p className="text-xs line-through text-gray-500">
+                          ₹{product.price}
+                        </p>
+                      </div>
+                      {product.stock <= 0 && (
+                        <p className="mt-2 text-sm text-red-500">
+                          Out of stock
+                        </p>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+                </Link>
+              ))}
+            </div>
+          </>
         )}
       </div>
     </div>

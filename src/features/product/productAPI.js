@@ -25,6 +25,18 @@ export function updateProduct(update) {
       body: JSON.stringify(update),
       headers: { "content-type": "application/json" },
     });
+
+    const data = await response.json();
+    resolve({ data });
+  });
+}
+
+export function searchProducts(query) {
+  return new Promise(async (resolve) => {
+    const response = await fetch(`/products/search?q=${query}`, {
+      method: "GET",
+      headers: { "content-type": "application/json" },
+    });
     const data = await response.json();
     resolve({ data });
   });

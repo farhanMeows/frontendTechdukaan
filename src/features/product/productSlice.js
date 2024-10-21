@@ -8,6 +8,7 @@ import {
   fetchProductById,
   createProduct,
   updateProduct,
+  searchProducts,
   fetchSubcategoriesByCategoryId,
   fetchSpecifications,
   fetchProcessors,
@@ -28,6 +29,7 @@ const initialState = {
   status: "idle",
   totalItems: 0,
   selectedProduct: null,
+  error: null,
 };
 
 export const fetchProductByIdAsync = createAsyncThunk(
@@ -166,6 +168,19 @@ export const updateProductAsync = createAsyncThunk(
   }
 );
 
+// Async thunk for searching productsx
+export const searchProductAsync = createAsyncThunk(
+  "product/search",
+  async (query) => {
+    console.log("called");
+
+    const response = await searchProducts(query);
+    console.log("response", response.data);
+
+    return response.data;
+  }
+);
+
 export const productSlice = createSlice({
   name: "product",
   initialState,
@@ -280,6 +295,13 @@ export const productSlice = createSlice({
       .addCase(fetchProductByIdAsync.fulfilled, (state, action) => {
         state.status = "idle";
         state.selectedProduct = action.payload;
+      })
+      .addCase(searchProductAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(searchProductAsync.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.products = action.payload; // Set the products to the returned data
       })
       .addCase(createProductAsync.pending, (state) => {
         state.status = "loading";

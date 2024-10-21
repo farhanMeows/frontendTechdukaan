@@ -251,23 +251,15 @@ function ProductForm() {
       setValue("image1", selectedProduct.images[0]);
       setValue("image2", selectedProduct.images[1]);
       setValue("image3", selectedProduct.images[2]);
-      // setValue("brand", selectedProduct.brand);
+      setValue("brand", selectedProduct.brand);
       // setValue("category", selectedProduct.category);
-      // setValue("Subcategory", selectedProduct.subcategory);
-      // setValue("Ram", selectedProduct.ram);
-      // setValue("processor", selectedProduct.processor);
+      setValue("Subcategory", selectedProduct.subcategory);
+      setValue("Rams", selectedProduct.ram);
+      setValue("processor", selectedProduct.processor);
       setValue("highlight1", selectedProduct.highlights[0]);
       setValue("highlight2", selectedProduct.highlights[1]);
       setValue("highlight3", selectedProduct.highlights[2]);
       setValue("highlight4", selectedProduct.highlights[3]);
-      // setValue(
-      //   "sizes",
-      //   selectedProduct.sizes.map((size) => size.id)
-      // );
-      // setValue(
-      //   "colors",
-      //   selectedProduct.colors.map((color) => color.id)
-      // );
     }
   }, [selectedProduct, params.id, setValue]);
 
@@ -303,24 +295,18 @@ function ProductForm() {
             product.highlight3,
             product.highlight4,
           ];
-          // product.rating = 0;
-          // if (product.colors) {
-          //   product.colors = product.colors.map((color) =>
-          //     colors.find((clr) => clr.id === color)
-          //   );
-          // }
-          // if (product.sizes) {
-          //   product.sizes = product.sizes.map((size) =>
-          //     sizes.find((sz) => sz.id === size)
-          //   );
-          // }
-          // Ensure subcategory and specification are correctly assigned
+
           product.subCategory = product.subcategory; // Use consistent casing if necessary
           product.category = product.category; // Handle singular case
           product.ram = product.ram; // Handle singular case
-          console.log(product.ram);
-
           product.processor = product.processor; // Handle singular case
+          product.brand = product.brand;
+          product.colour = product.colour;
+          product.size = product.size;
+          product.graphic = product.graphic;
+          product.inkandcartridges = product.inkandcartridges;
+          product.storage = product.storage;
+          product.type = product.type;
 
           delete product["image1"];
           delete product["image2"];
@@ -400,50 +386,6 @@ function ProductForm() {
                 </p>
               </div>
 
-              {/* <div className="col-span-full">
-                <label
-                  htmlFor="colors"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Colors
-                </label>
-                <div className="mt-2">
-                  {colors.map((color) => (
-                    <>
-                      <input
-                        type="checkbox"
-                        {...register("colors", {})}
-                        key={color.id}
-                        value={color.id}
-                      />{" "}
-                      {color.name}
-                    </>
-                  ))}
-                </div>
-              </div> */}
-
-              {/* <div className="col-span-full">
-                <label
-                  htmlFor="sizes"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Sizes
-                </label>
-                <div className="mt-2">
-                  {sizes.map((size) => (
-                    <>
-                      <input
-                        type="checkbox"
-                        {...register("sizes", {})}
-                        key={size.id}
-                        value={size.id}
-                      />{" "}
-                      {size.name}
-                    </>
-                  ))}
-                </div>
-              </div> */}
-
               <div className="sm:col-span-2">
                 <label
                   htmlFor="category"
@@ -507,7 +449,7 @@ function ProductForm() {
               </div>
               <div className="sm:col-span-2">
                 <label
-                  htmlFor="Colour"
+                  htmlFor="colour"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
                   Colour
