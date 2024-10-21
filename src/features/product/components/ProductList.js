@@ -145,7 +145,7 @@ export default function ProductList() {
     },
     {
       id: "inkandcartridges",
-      name: "Inkandcartridges",
+      name: "Ink & Cartridges",
       options: inkandcartridges,
     },
     {
